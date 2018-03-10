@@ -1,7 +1,7 @@
 // choco_ways.cpp : https://www.hackerrank.com/challenges/equal/problem
 // ## arr[n] -> arr[n-1] recursion, convert to DP
 
-// 2 3 7 ** pairs: 2 7, 2 3, 3 7; if (2, 7) = 1
+// 2 3 7 ** pairs: 3 7, 2 7, 2 3; if (2, 7) = 1
 
 #include "stdafx.h"
 #include <iostream>
@@ -18,6 +18,21 @@ void process_error(const string, const int);
 #define PRN(X) std::cout << X << std::endl
 
 typedef vector<int> Myvec;
+
+bool all_same(Myvec arr)
+{
+	if (arr.size() <= 1) return 0;
+
+	int first = arr[0];
+
+	for (auto iter = arr.begin() + 1; iter != arr.end(); ++iter)
+	{
+		if (*iter != first) return false;
+	}
+
+	return true;
+}
+
 
 // can give 1 or 3 or 5
 int delta(Myvec arr)
@@ -71,25 +86,15 @@ int delta(Myvec arr)
 	return result;
 }
 
-Myvec make_unique(Myvec arr)
+int equal(Myvec arr)
 {
 	Myvec result;
-
-	sort(arr.begin(), arr.end());
-	auto cutoff = unique(arr.begin(), arr.end());
-	copy(arr.begin(), cutoff, back_inserter(result));
-
-	return result;
-}
-
-
-int equal(Myvec origin)
-{
-	Myvec result, arr = make_unique(origin);
 
 	if (arr.size() <= 1) return 0;
 
 	if (arr.size() == 2) return delta(arr);
+
+	if (all_same(arr)) return 0;
 
 	// do the recursion
 	Myvec allbutone, v_tmp;
@@ -99,14 +104,17 @@ int equal(Myvec origin)
 		copy(arr.begin(), iter, back_inserter(allbutone));
 		copy(iter + 1, arr.end(), back_inserter(allbutone));
 
+		int temp = equal(allbutone);
+
 		v_tmp.push_back(*iter);
 		v_tmp.push_back(*min_element(allbutone.begin(), allbutone.end()));
 
-		int temp = equal(v_tmp) + equal(allbutone);
+		temp += delta(v_tmp);
 		result.push_back(temp);
 	}
 
-	return *min_element(result.begin(), result.end());
+	int temp = *min_element(result.begin(), result.end());
+	PRN(temp); return temp;
 }
 
 int main() {
