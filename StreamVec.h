@@ -27,14 +27,11 @@ template<typename T> std::istream& operator>> (std::istream& iis, std::vector<T>
 
 	myvec.clear(); myvec.resize(vecSize);
 
-	for (size_t i = 0; i < vecSize; i++)
+	for (auto &elem : myvecSize)
 	{
-		T temp;
-		iis >> temp;
+		iis >> elem;
 
 		if (!iis.good()) throw std::out_of_range("Vector I/O failure");
-
-		myvec[i] = temp;
 	}
 
 	return iis;
