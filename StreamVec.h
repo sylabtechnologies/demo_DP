@@ -27,7 +27,7 @@ template<typename T> std::istream& operator>> (std::istream& iis, std::vector<T>
 
 	myvec.clear(); myvec.resize(vecSize);
 
-	for (auto &elem : myvecSize)
+	for (auto &elem : myvec)
 	{
 		iis >> elem;
 
