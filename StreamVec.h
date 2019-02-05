@@ -25,14 +25,22 @@ template<typename T> std::istream& operator>> (std::istream& iis, std::vector<T>
 {
 	size_t vecSize = myvec.size();
 
-	myvec.clear(); myvec.resize(vecSize);
+	myvec.clear();
 
-	for (auto &elem : myvec)
+	size_t i;
+	while (i < vecSize)
 	{
-		iis >> elem;
+		T temp;
+		iis >> temp;
 
-		if (!iis.good()) throw std::out_of_range("Vector I/O failure");
+		if (!iis.good()) throw std::runtime_error("Vector I/O failure");
+
+		// cant emplace_back here
+		myvec.push_back(temp);
+		i++
 	}
+
+	if (i != vecSize) throw std::runtime_error("Vector cant be filled");
 
 	return iis;
 }
