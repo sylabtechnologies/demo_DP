@@ -27,7 +27,7 @@ public:
 
 void MyQueue::enqueue(int val)
 {
-    queue.push(val);
+    queue.push(val);    // DO queue.emplace for templated with arguments version?
 }
 
 int MyQueue::dequeue()
