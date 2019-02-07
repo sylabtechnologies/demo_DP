@@ -11,30 +11,21 @@ typedef long long LL;
 typedef vector<LL> L_vec;
 typedef vector<int> I_vec;
 
-LL make_change(I_vec coins, int money)
-{
-	if (coins.size() < 0) return 0;
+long long ways(int dollars, vector<int> coin) {
+    sort(coin.begin(), coin.end());
 
-	int s_y = money + 1; int s_x = coins.size();
-	vector<L_vec> table(s_y, L_vec(s_x));
+    vector<long long> ways(dollars + 1, 0);
+    ways[0] = 1;                // b/c/o way to change 0 dollars!
 
-	// 0 value
-	for (int i = 0; i < s_x; i++)
-		table[0][i] = 1;
+    for (auto c : coin)
+    {
+        for (size_t i = c; i < dollars + 1; i++)
+        {
+            ways[i] += ways[i - c];
+        }
+    }
 
-	// count the rest
-	for (int i = 1; i < s_y; i++)
-	{
-		for (int j = 0; j < s_x; j++)
-		{
-			int k = coins[j];
-			LL x = (i - k >= 0) ? table[i - k][j] : 0;
-			LL y = (j >= 1) ? table[i][j - 1] : 0;
-			table[i][j] = x + y;
-		}
-	}
-
-	return table[s_y - 1][s_x - 1];
+    return ways[dollars];
 }
 
 int main()
@@ -49,7 +40,7 @@ int main()
 
 	// sort coins
 	sort(coins.begin(), coins.end());
-	cout << make_change(coins, dollars) << endl;
+	cout << ways(coins, dollars) << endl;
 	return 0;
 }
 
