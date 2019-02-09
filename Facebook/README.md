@@ -11,5 +11,5 @@
 10. istreanstream
 
 #WB = running total,
-12.1. BRUTE FORCE FIRST
+12.1. #RD - can force it
 12.2. shift interval and compute petrol

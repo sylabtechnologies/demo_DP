@@ -1,5 +1,3 @@
-// https://www.hackerrank.com/challenges/journey-to-the-moon/problem
-
 #include <bits/stdc++.h>
 
 using namespace std;

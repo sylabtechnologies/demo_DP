@@ -1,0 +1,42 @@
+class Solution {
+    public:
+	    int bulbs(vector<int> &A) {
+		    int state= 0, ans = 0;
+		    for (int i = 0;i < A.size();i++) {
+			    if (A[i] == state) {
+				    ans++;
+				    state = 1 - state;
+			    }
+		    }
+		    return ans;
+	    }
+};
+
+/*
+
+public class Solution {
+    public int bulbs(List<Integer> a) {
+        if(a == null || a.size() == 0)
+        return 0; 
+        
+        int count = 0; 
+        int index = 0; 
+        while(a !=null && index < a.size())
+        {
+            Integer previous = a.get(index); 
+            
+            boolean isEven = count%2 == 0; 
+            boolean previousIsEven = previous.intValue()%2 ==0; 
+            if((isEven && previousIsEven) ||(!isEven && !previousIsEven))
+            {
+                count ++;
+            }
+            
+            index++; 
+        }
+        
+        return count; 
+    }
+}
+
+*/
