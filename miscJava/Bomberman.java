@@ -101,6 +101,8 @@ public class Solution
         }
         
         // step3 - we detonate
+        ArrayList<Location> locations = new ArrayList<>();
+        
         for (int i = 0; i < grid.length; i++)
         {
             for (int j = 0; j < c; j++)
@@ -109,22 +111,15 @@ public class Solution
                 
                 if (game[i][j].canDetonate())
                 {
-                    ArrayList<Location> adjacent = getAdjacent(grid.length, c, i,j);
-
-                    game[i][j].weHaveBomb = false;
-                    
-                    for (Location loc : adjacent)
-                    {
-                        if (game[loc.i][loc.j].weHaveBomb)
-                        {
-                            if (!game[loc.i][loc.j].canDetonate())
-                                game[loc.i][loc.j].weHaveBomb = false;
-                        }
-                    }
+                    locations.addAll(getAdjacent(grid.length, c, i,j));
                 }
             }
         }
-
+        
+        for (Location loc : locations)
+        {
+            game[loc.i][loc.j].weHaveBomb = false;
+        }
 
         for (int i = 0; i < grid.length; i++)
         {
