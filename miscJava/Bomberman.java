@@ -1,14 +1,14 @@
-// https://www.hackerrank.com/challenges/bomber-man/problem
+// bomberman
+// 1. we public final
+// 2. we break the steps
 
 package solution;
-
-import java.math.BigDecimal;
 import java.util.*;
 
 class Location
 {
-    int i;
-    int j;
+    public final int i;
+    public final int j;
     
     public Location(int x, int y)
     {
@@ -24,25 +24,24 @@ class Location
 
 class Bomb
 {
-    boolean weHaveBomb = false;
-    int sec2detonate   = 0;
+    private boolean weHaveBomb = false;
+    private int sec2detonate   = 0;
 
     public Bomb()
-    {
-    }
-
-    public void plant()
     {
         weHaveBomb = true;
         sec2detonate = 3;
     }
 
+    public boolean exists() {return weHaveBomb;}
+    
     public void detonate()
     {
         weHaveBomb = false;
         sec2detonate = 0;
     }
-
+    
+    
     public boolean canDetonate()
     {
         return weHaveBomb & sec2detonate == 0;
@@ -56,78 +55,17 @@ class Bomb
 
 public class Solution
 {
-    
-    // Complete the bomberMan function below.
-    static String[] bomberMan(int n, String[] grid)
+    private static String[] printGrid(Bomb[][] game, int col)
     {
-        if (grid.length == 0)
-            throw new IllegalArgumentException("grid must be full");
-
-        int c = grid[0].length();
+        String[] grid = new String[game.length];
         
-        Bomb[][] game = new Bomb[grid.length][c];
-
-        // step 0: plant bombs
-        for (int i = 0; i < grid.length; i++)
-        {
-            for (int j = 0; j < c; j++)
-            {
-                game[i][j] = new Bomb();
-                
-                if (grid[i].charAt(j) == 'O')
-                    game[i][j].plant();
-            }
-        }
-        
-        // step 1: tick existing and plant the rest
-        for (int i = 0; i < grid.length; i++)
-        {
-            for (int j = 0; j < c; j++)
-            {
-                game[i][j].tick();
-            }
-        }
-        
-        // step 2: plant the rest of bombs
-        for (int i = 0; i < grid.length; i++)
-        {
-            for (int j = 0; j < c; j++)
-            {
-                if (game[i][j].weHaveBomb)
-                    game[i][j].tick();
-                else
-                    game[i][j].plant();
-            }
-        }
-        
-        // step3 - we detonate
-        ArrayList<Location> locations = new ArrayList<>();
-        
-        for (int i = 0; i < grid.length; i++)
-        {
-            for (int j = 0; j < c; j++)
-            {
-                game[i][j].tick();
-                
-                if (game[i][j].canDetonate())
-                {
-                    locations.addAll(getAdjacent(grid.length, c, i,j));
-                }
-            }
-        }
-        
-        for (Location loc : locations)
-        {
-            game[loc.i][loc.j].weHaveBomb = false;
-        }
-
-        for (int i = 0; i < grid.length; i++)
+        for (int i = 0; i < game.length; i++)
         {
             StringBuilder sb = new StringBuilder();
             
-            for (int j = 0; j < c; j++)
+            for (int j = 0; j < col; j++)
             {
-                if (game[i][j].weHaveBomb)
+                if (game[i][j] != null)
                     sb.append('O');
                 else
                     sb.append('.');
@@ -138,8 +76,7 @@ public class Solution
 
         return grid;
     }
-
-    // make the cross
+    
     private static ArrayList<Location> getAdjacent(int rows, int columns, int i, int j)
     {
         ArrayList<Location> ans = new ArrayList<Location>();
@@ -162,6 +99,89 @@ public class Solution
 
         return ans;
     }
+    
+    private static void tickAll(Bomb[][] grid, int col)
+    {
+        for (int i = 0; i < grid.length; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (grid[i][j] != null)
+                    grid[i][j].tick();
+            }
+        }
+    }
+    
+    static String[] bomberMan(int n, String[] grid)
+    {
+        if (grid.length == 0)
+            throw new IllegalArgumentException("cant use empty grid");
+
+        int col = grid[0].length();
+        
+        Bomb[][] game = new Bomb[grid.length][col];
+
+        // plant 1st batch
+        for (int i = 0; i < grid.length; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (grid[i].charAt(j) == 'O')
+                {
+                    game[i][j] = new Bomb();
+                }
+            }
+        }
+
+        // s1: tick all
+        n--;
+        tickAll(game, col);
+
+        while ( n > 0)
+        {
+
+            // s2: plant the rest of bombs
+            n--;
+            tickAll(game, col);
+            for (int i = 0; i < grid.length; i++)
+            {
+                for (int j = 0; j < col; j++)
+                {
+                    if (game[i][j] == null)
+                        game[i][j] = new Bomb();
+                }
+            }
+            if (n == 0) break;
+
+            // s3 - detonate existing bombs
+            n--;
+            tickAll(game, col);
+
+            ArrayList<Location> locations = new ArrayList<>();
+
+            for (int i = 0; i < grid.length; i++)
+            {
+                for (int j = 0; j < col; j++)
+                {
+                    if (game[i][j].canDetonate())
+                    {
+                        locations.addAll(getAdjacent(grid.length, col, i,j));
+                        game[i][j] = null;
+                    }
+                }
+            }
+
+            for (Location loc : locations)
+            {
+                game[loc.i][loc.j] = null;
+            }
+
+            // if (n == 0) break;
+        }
+        
+        // print solution
+        return printGrid(game, col);
+    }
 
     
     public static void main(String []args)
@@ -173,7 +193,6 @@ public class Solution
         
         //Input
         Scanner sc = new Scanner(System.in);
-
         String[] s =new String[r];
         
         for(int i=0; i < r; i++)
