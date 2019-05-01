@@ -25,7 +25,7 @@ public class Util
         return new LinkedList<T>();
     }
     
-    public static <T> void printList(List<T> list)
+    public static <T> void printList(List<? extends T> list)
     {
         System.out.print("[");
         boolean first = true;
