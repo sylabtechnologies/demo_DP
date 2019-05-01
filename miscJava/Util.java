@@ -24,13 +24,18 @@ public class Util
     public static <T> Queue<T> queue() {
         return new LinkedList<T>();
     }
+
+    public static <T> void print(T[] list)
+    {
+        print(Arrays.asList(list));
+    }
     
-    public static <T> void printList(List<? extends T> list)
+    public static void print(List<?> list)
     {
         System.out.print("[");
         boolean first = true;
         
-        for (T elem : list)
+        for (Object elem : list)
         {
             if (first)
                 first = false;
