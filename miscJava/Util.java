@@ -25,7 +25,7 @@ public class Util
         System.out.print("[");
         boolean first = true;
         
-        for (Object elem : list)
+        for (T elem : list)
         {
             if (first)
                 first = false;
