@@ -4,6 +4,11 @@ import java.util.*;
 
 public class Util
 {
+    public static Scanner skan()
+    {
+        return new Scanner(System.in);
+    }
+    
     public static <K,V> Map<K,V> map() {
         return new HashMap<K,V>();
     }
