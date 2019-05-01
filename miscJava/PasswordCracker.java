@@ -1,20 +1,24 @@
-/** add memoization, add bloom filters?
+/**
+ * we must memoize:
+ * * 
  * https://www.hackerrank.com/challenges/password-cracker/problem
  */
+
 package passwordcracker;
 import java.util.*;
+import static toolz.Util.*;
 
 public class PasswordCracker
 {
     private final static Scanner scan = new Scanner(System.in);
-    private static Set<String> goodSet = new HashSet<>();
-    private static Set<Integer> goodSizes = new HashSet<>();
-
+    private static Set<String> goodSet = set();
+    private static Set<Integer> goodSizes = set();
+    
     private static void eliminatePasswords(List<String> passwords, String attempt)
     {
         for (String pwd : passwords)
         {
-            if (attempt.indexOf(pwd) >= 0)
+            if (attempt.contains(pwd))
             {
                 goodSet.add(pwd);
                 goodSizes.add(pwd.length());
@@ -22,9 +26,9 @@ public class PasswordCracker
         }
     }
 
-    private static List<String> getSolution(String loginAttempt)
+    private static List<String> getSolution(String loginAttempt, int recursionLevel)
     {
-        List<String> answer = new ArrayList<>();
+        List<String> answer = list();
         
         Integer maxSize = new Integer(loginAttempt.length());
         
@@ -41,14 +45,16 @@ public class PasswordCracker
                     answer.add(test);
                     break;
                 }
+                
+                if (recursionLevel < 3000) {
+                    List<String> nextSol = getSolution(loginAttempt.substring(nextSize), recursionLevel + 1);
 
-                List<String> nextSol = getSolution(loginAttempt.substring(nextSize));
-
-                if (!nextSol.isEmpty())
-                {
-                    answer.add(test);
-                    answer.addAll(nextSol);
-                    break;
+                    if (!nextSol.isEmpty())
+                    {
+                        answer.add(test);
+                        answer.addAll(nextSol);
+                        break;
+                    }
                 }
             
             }
@@ -63,9 +69,11 @@ public class PasswordCracker
         
         if (goodSet.isEmpty()) return "WRONG PASSWORD";
         
-        List<String> sol = getSolution(loginAttempt);
+        List<String> sol = getSolution(loginAttempt, 0);
         
         if (sol.isEmpty()) return "WRONG PASSWORD";
+        
+        // writeFile("solved.txt", sol);
             
         String res = new String(sol.get(0));
         
