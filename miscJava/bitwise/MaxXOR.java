@@ -4,7 +4,6 @@ import static toolz.Util.skan;
 
 public class MaxXOR
 {
-
     private final static Scanner scan = skan();
     
     public static void main(String[] args)

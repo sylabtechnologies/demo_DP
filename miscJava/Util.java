@@ -74,9 +74,8 @@ public class Util
 
         return lines;
     }
- 
-    
-    public static void writeFile(String location, List<String> lineList)
+     
+    public static void writeFile(String location, List<?> lineList)
     {
         try
         {
@@ -84,8 +83,8 @@ public class Util
             FileWriter writer = new FileWriter(location);
             Writer outp = new BufferedWriter(writer);
             
-            for (String s : lineList)
-                outp.write(s + "\n");
+            for (Object s : lineList)
+                outp.write(s.toString() + "\n");
             
             outp.close();
         }
