@@ -1,6 +1,6 @@
 #pragma once
 
-template<typename T> std::ostream& operator<< (std::ostream& os, std::vector<T>& myvec)
+template<typename T> std::ostream& operator<< (std::ostream& os, const std::vector<T>& myvec)
 {
 	if (!myvec.empty())
 	{
@@ -33,14 +33,14 @@ template<typename T> std::istream& operator>> (std::istream& iis, std::vector<T>
 		T temp;
 		iis >> temp;
 
-		if (!iis.good()) throw std::runtime_error("Vector I/O failure");
+		if (!iis.good()) break; 
 
 		// cant emplace_back here
 		myvec.push_back(temp);
 		i++
 	}
 
-	if (i != vecSize) throw std::runtime_error("Vector cant be filled");
+	if (!iis.good() || i != vecSize) throw std::runtime_error("Vector I/O failure");
 
 	return iis;
 }
