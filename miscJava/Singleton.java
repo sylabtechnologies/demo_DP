@@ -1,6 +1,7 @@
 // we require:
-// 1. get static access getInstance
-// 2. keep a String value
+// 1. force only one object creation
+// 2. get static access -> getInstance
+// 3. keep a String value (make it final through getValue/setValue?)
 
 public class Singleton
 {
