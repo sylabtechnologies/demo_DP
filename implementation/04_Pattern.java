@@ -1,3 +1,6 @@
+// always good to rearrange
+// change to initBuffer, pushBuffer, equalsToBuffer
+
 package gridsearch;
 import java.util.*;
 
