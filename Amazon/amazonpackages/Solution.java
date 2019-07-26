@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Solution
 {
-    private static int RESERVE = 30;
+    private final static int RESERVE = 30;
     
     public ArrayList<Integer> IDsOfPackages(int truck, ArrayList<Integer> packages)
     {
@@ -42,7 +42,6 @@ public class Solution
                         ans.clear();
                         ans.add(tester.get(i).index);
                         ans.add(tester.get(j).index);
-                        maxDelta = delta;
                     }
                 }
             }
