@@ -50,6 +50,8 @@ public class Testtest {
         ListNode ans = deleteNode(r1, 2);
         if (ans != null)
             System.out.println(ans.toString());
+        System.out.println(r1);
+
         
     }
 
@@ -66,10 +68,13 @@ public class Testtest {
         }
         
         if (prev == root)
+        {
             root = curr.next;
-        else
-            prev.next = curr.next;
+            System.out.println(root);
+            return prev;
+        }
         
+        prev.next = curr.next;
         System.out.println(root);
         
         curr.next = null;
@@ -77,3 +82,5 @@ public class Testtest {
     }
     
 }
+
+
