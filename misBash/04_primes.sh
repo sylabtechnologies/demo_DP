@@ -1,18 +1,31 @@
-# generate unique id from md5sum /etc/passwd
+# generate 60000:63000 primes
 
-myId=$(md5sum /etc/passwd)
-echo $myId
+#start=60000
+#end=63000
 
-len=${#myId}
+start=3
+end=1000
 
-res=""
-for ((i=0; i<$len; i++))
+numprimes=0
+declare -a primes
+
+for ((number=$start; number<=$end; number++))
 do
-  ttm="${myId:$i:1}"
-  if [[ $ttm == [0-9] ]]
-  then
-    res="$res$ttm"
-  fi
+  flag=0
+  for ((i=$2; i <= number / 2; i++))
+  do
+    if test `expr $number % $i` -eq 0  
+    then
+      flag=1
+      break
+    fi
+
+    if test $flag -eq 0
+    then
+      primes[$numprimes] = $number
+      numprimes=$((numprimes + 1))
+    fi
+  done
 done
 
-echo ${res:0:6}
+echo ${primes[@]}
