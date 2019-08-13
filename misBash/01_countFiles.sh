@@ -1,12 +1,15 @@
 # count files in each root subdir
 
+echo $PWD
+echo look into root:
+
 cd /
 declare -a dirs=($(ls /))
 
 for d in  ${dirs[@]}
 do
    cd /
-   if [ -r $d]
+   if [ -r $d ]
    then
     cd $d
 
@@ -16,10 +19,13 @@ do
     do
       count=$((count + 1))
     done
+    
+    mytail="file"
+    if [ "$count" -ne  1 ]
+    then
+      mytail="$mytail""s"
+    fi
 
-    echo $pwd $count files
+    echo $PWD $count $mytail
    fi
 done
-
-
-
