@@ -1,77 +1,63 @@
 package amazonpackages;
-import java.util.*;
+
+// 1st try
+// try window from both ends
+// modify the problem: find max combo to fit into truck minus reserve
+// (solve the original w/ hash table of differences)
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Solution
 {
-    private final static int RESERVE = 30;
-    
-    public ArrayList<Integer> IDsOfPackages(int truck, ArrayList<Integer> packages)
-    {
-        ArrayList<Item> tester = new ArrayList<>();
-        for (int i = 0; i < packages.size(); i++)
-        {
-            Item it = new Item(packages.get(i), i);
-            tester.add(it);
-        }
-        Collections.sort(tester);
-        
-        ArrayList<Integer> ans = new ArrayList<Integer>();
-        int limit  = truck - RESERVE;
-        int maxDelta = Integer.MAX_VALUE;
+    public final static int RESERVE = 30;
 
-        for (int i = 0; i < tester.size(); i++)
-        {
-            for (int j = i + 1; j < tester.size(); j++)
-            {
-                int occupied = tester.get(i).value +  tester.get(j).value;
-                int delta = limit - occupied;
-                if (delta < 0) break;
-                    
-                if (delta < maxDelta)
-                {
-                    ans.clear();
-                    ans.add(tester.get(i).index);
-                    ans.add(tester.get(j).index);
-                    maxDelta = delta;
-                }
-                else if (delta == maxDelta)
-                {
-                    if (Math.max(tester.get(i).value, tester.get(j).value)
-                        > Math.max(ans.get(0), ans.get(1)))
-                    {
-                        ans.clear();
-                        ans.add(tester.get(i).index);
-                        ans.add(tester.get(j).index);
-                    }
-                }
-            }
-        }
+    public ArrayList<Integer> IDsOfPackages(int truckSpace, ArrayList<Integer> packages)
+    {
+        System.out.println(packages);
         
-        if (ans.isEmpty()) ans.add(-1);
+        if (packages.size() <= 2) throw new IllegalArgumentException("small packages");
+        
+        truckSpace -= RESERVE;
+        if (truckSpace <= 0) throw new IllegalArgumentException("small truck");
+
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+               
+        int i = 0; 
+        int j = packages.size() - 1;
+        int delta = truckSpace*10;
+        
+        while (i < j)
+        {
+            int current  = packages.get(i) + packages.get(j);
+            int curDelta = truckSpace - current;
+            
+            if (curDelta < 0)
+            {
+                j--;
+                continue;
+            }
+            
+            if (curDelta < delta)
+            {
+                delta = curDelta;
+                ans.clear();
+                ans.add(i);
+                ans.add(j);
+                if (delta == 0) break;
+                i++;
+                continue;
+            }
+            else if (curDelta == delta)
+            {
+                j--;
+                continue;
+            }
+            
+        }
+
+        if (ans.isEmpty()) throw new IllegalArgumentException("no solution");
         return ans;
     }
 
-    private class Item implements Comparable<Item>
-    {
-        int value;
-        int index;
-
-        public Item(int value, int index)
-        {
-            this.value = value;
-            this.index = index;
-        }
-
-        @Override
-        public int compareTo(Item o)
-        {
-            if (this.value == o.value) return 0;
-
-            if (this.value > o.value) return 1;
-
-            return -1;
-        }
-    }
-
-    
 }
