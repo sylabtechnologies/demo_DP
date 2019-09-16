@@ -1,9 +1,10 @@
 package amazonpackages;
 
-// 1st try
+// the original = store all in hash table and seek the difference
+
+// in-place 1st try:
 // try window from both ends
-// modify the problem: find max combo to fit into truck minus reserve
-// (solve the original w/ hash table of differences)
+// 
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,39 +26,28 @@ public class Solution
                
         int i = 0; 
         int j = packages.size() - 1;
-        int delta = truckSpace*10;
         
         while (i < j)
         {
-            int current  = packages.get(i) + packages.get(j);
-            int curDelta = truckSpace - current;
-            
-            if (curDelta < 0)
+            int current = packages.get(i) + packages.get(j);
+
+            if (current == truckSpace)
             {
-                j--;
-                continue;
-            }
-            
-            if (curDelta < delta)
-            {
-                delta = curDelta;
-                ans.clear();
                 ans.add(i);
                 ans.add(j);
-                if (delta == 0) break;
-                i++;
-                continue;
+                return ans;
             }
-            else if (curDelta == delta)
+            else if (current < truckSpace)
+            {
+                i++;
+            }
+            else if (current > truckSpace)
             {
                 j--;
-                continue;
             }
-            
         }
 
-        if (ans.isEmpty()) throw new IllegalArgumentException("no solution");
-        return ans;
+        throw new IllegalArgumentException("no solution");
     }
 
 }
