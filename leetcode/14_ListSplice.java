@@ -7,7 +7,7 @@ class ListNode
     ListNode(int x) { val = x; }
 }
 
-// barbell
+// barbell it & get very efficient
 public class ListSplice
 {
     public static void main(String[] args)
@@ -21,8 +21,10 @@ public class ListSplice
         list2.next = new ListNode(3);
         list2.next.next = new ListNode(4);
         printList(list2);
+
+        ListNode list3 = new ListNode(0);
         
-        ListNode splice = mergeTwoLists(list1, list2);
+        ListNode splice = mergeTwoLists(null, list3);
         
         printList(splice);
         
@@ -30,28 +32,27 @@ public class ListSplice
 
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2)
     {
-        if (l1 == null) return null;
+        if (l1 == null && l2 == null) return null;
         
-        ListNode cur1 = l1;
-        ListNode cur2 = l2;
         ListNode worker = new ListNode(0), ans = worker;
-        
-        while (true)
+        while (l1 != null || l2 != null)
         {
-            // copy 2 and try to advance
-            worker.val = cur1.val;
-            worker.next = new ListNode(cur2.val);
-            
-            cur1 = cur1.next;
-            cur2 = cur2.next;
-            
-            if (cur1 == null) break;
-            worker = worker.next;
-            worker.next = new ListNode(0);
-            worker = worker.next;
+            if (l1 != null)
+            {
+                worker.next = new ListNode(l1.val);
+                worker = worker.next;
+                l1 = l1.next;
+            }
+
+            if (l2 != null)
+            {
+                worker.next = new ListNode(l2.val);
+                worker = worker.next;
+                l2 = l2.next;
+            }
         }
         
-        return ans;        
+        return ans.next;
     }
 
     private static void printList(ListNode root)
