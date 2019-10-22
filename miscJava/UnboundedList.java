@@ -29,7 +29,7 @@ public class ObjCast {
     public static void main(String[] args)
     {
         List<String> ls = Arrays.asList("one", "two", "three");
-        printList(ls);
+        ObjCast.printList(ls);
         System.out.println();
     }
     
