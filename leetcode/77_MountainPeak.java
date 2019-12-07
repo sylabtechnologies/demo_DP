@@ -1,54 +1,43 @@
-// https://leetcode.com/problems/peak-index-in-a-mountain-array/
+// https://leetcode.com/problems/unique-binary-search-trees/
+// 
 
 package binmountain;
+import java.util.Arrays;
 
 class Solution
 {
-    // modify bin search: LIST ALL LOGIX probably to lo = hi + 2
     public static int peakIndexInMountainArray(int[] arr)
     {
         printArray(arr);
         
         int lo = 0;
-        int hi = arr.length;
-        int mid = 0;
+        int hi = arr.length - 1;
+        int ans = -1;
         
-        while (lo < hi)
+        while (hi - lo > 1)
         {
-            mid = lo + (hi - lo) / 2;
+            int mid = (lo + hi) / 2;
 
-            boolean leftOK = arr[mid] > arr[mid - 1];
-            boolean riteOK = arr[mid] > arr[mid + 1];
-            
-            if (riteOK & leftOK) return mid;
-            
-            if (arr[mid] > arr[lo])
+            if (arr[mid] > arr[mid - 1])     // discard all to the left
             {
-                if (leftOK)
-                    lo = mid;
-                else
-                    hi = mid;
-                
-                continue;
+                lo = mid;
+                ans = mid;
             }
             else
             {
-                if (riteOK)
-                    hi = mid;
-                else
-                    lo = mid;
+                hi = mid;
+                ans = mid - 1;
             }
         }
         
-        return -1;
+        return ans;
     }
     
     private static void printArray(int[] nums)
     {
         for (int i = 0; i < nums.length; i++)
-        {
             System.out.print(nums[i] + " ");
-        }
+        
         System.out.println(";");
     }
     
