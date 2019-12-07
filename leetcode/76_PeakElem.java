@@ -1,41 +1,28 @@
 /*
- * https://leetcode.com/problems/find-peak-element/
+ * https://leetcode.com/problems/find-peak-element/, peak exists
  */
 
 package peakelem;
 
 class Solution
 {
-    // peak exists:
     public static int findPeakElement(int[] nums)
     {
-        if (nums.length == 0) return -1;
-
-        if (nums.length == 1) return 0;
-
-        if (nums.length == 2)
+        int lo = 0;
+        int hi = nums.length - 1;
+        int mid = 0;
+        
+        while (lo < hi)
         {
-            if (nums[0] > nums[1])
-                return 0;
-            else if (nums[0] < nums[1])
-                return 1;
-            else return -11;
+            mid = lo + (hi - lo + 1) / 2;
+
+            if (mid > 0 && nums[mid] > nums[mid - 1])   // discard left
+                lo = mid;
+            else
+                hi = mid - 1;
         }
         
-        if (nums[0] > nums[1]) return 0;
-            
-        if (nums[nums.length - 2] < nums[nums.length - 1]) return nums.length - 1;
-        
-        // naive search
-        for (int i = 1; i < nums.length - 1; i++)
-        {
-            if ( (nums[i - 1] < nums[i]) && (nums[i] > nums[i + 1]) )
-                return i;
-        }
-        
-        return -1;
+        return lo;
     }
 }
 
-/*
-*/
