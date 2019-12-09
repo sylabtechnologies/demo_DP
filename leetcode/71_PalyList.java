@@ -43,7 +43,7 @@ class Solution
         return ans;
     }
 
-    // cmp two non-null lists
+    // cmp two non-null lists, short-circuit AND OR
     private static boolean compareLists(ListNode first, ListNode second)
     {
         while (first != null && second != null)
