@@ -1,4 +1,5 @@
 // https://leetcode.com/problems/search-in-rotated-sorted-array/
+// clean up
 
 package searchrotated;
 
@@ -21,59 +22,36 @@ public class Solution
         return -1;
     }
 
-    private static int testPair(int[] nums, int lo, int hi, int target)
-    {
-        if (lo + 1 != hi) throw new IllegalArgumentException("pair test");
-        
-        if (nums[lo] == target)
-            return lo;
-        else if (nums[hi] == target)
-            return hi;
-        else
-            return -1;
-    }
-    
-    // **** if right < left = we are rotated
+    // find rotation R = A[r] > A[r+1]
     public static int search(int[] nums, int target)
     {
         printArray(nums);
         
-        if (nums.length == 0) return -1;
-        if (nums.length == 1) return (nums[0] == target) ? 0 : -1;
+        if (nums.length  < 2) return binarySearch(nums, 0, nums.length - 1, target);
         
-        if (nums.length == 2) 
-            return testPair(nums, 0, 1, target);
+        int lo = 0, hi = nums.length - 1, mid = 0;
         
-        int lo = 0, hi = nums.length - 1;
+        if (nums[lo] < nums[hi]) return binarySearch(nums, lo, hi, target);
         
+        // find R
         while (lo <= hi)
         {
-            if (lo + 1 == hi) return testPair(nums, lo, hi, target);
-            
-            if (nums[lo] <= nums[hi])
-                return binarySearch(nums, lo, hi, target);
-            
-            int mid = (lo + hi)/2;
+            mid = (lo + hi)/2;
 
-            if (nums[mid] == target)
-                return mid;
-            else if (nums[lo] < nums[mid])
-            {
-                if (target < nums[lo] || target > nums[mid])
-                    lo = mid + 1;
-                else
-                    hi = mid;
-            }
-            else
-            {
-                if (target < nums[mid] || target > nums[hi])
-                    hi = mid-1;
-                else
-                    lo = mid;
-            }
+            if (nums[mid] > nums[mid + 1]) break;
+            
+            if (nums[lo] < nums[mid])
+                lo = mid;
+            else 
+                hi = mid;
         }
         
-        return -1;
+        int ans = binarySearch(nums, 0, mid, target);
+        
+        if (ans >= 0)
+            return ans;
+        else
+            return binarySearch(nums, mid + 1, nums.length - 1, target);
     }
 
     private static void printArray(int[] nums)
