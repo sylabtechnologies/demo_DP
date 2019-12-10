@@ -30,7 +30,6 @@ public class Solution
         if (nums.length  < 2) return binarySearch(nums, 0, nums.length - 1, target);
         
         int lo = 0, hi = nums.length - 1, mid = 0;
-        
         if (nums[lo] < nums[hi]) return binarySearch(nums, lo, hi, target);
         
         // find R
