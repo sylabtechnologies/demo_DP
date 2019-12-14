@@ -17,9 +17,9 @@ class Solution
         for (int[] i : intervals)
             sorted.add(new Interval(i[0], i[1]));
 
-        Collections.sort(sorted); // COVER ALL W/ x.len < y.len
+        Collections.sort(sorted); // BIGGER COVERS ALL
         for (Interval iv : sorted)
-            tr.overwriteCovered(iv); // skip encloser w/ static inner
+            tr.overwriteCovered(iv); // do not enclose inner
         
         return tr.size();
     }
