@@ -1,15 +1,13 @@
-/*
-An integer has sequential digits if and only if each digit in the number
-is one more than the previous digit.
-
-Return a sorted list of all the integers in the range [low, high]
-inclusive that have sequential digits.
-
-##DESIGN ##DRY
-*/
+// https://leetcode.com/problems/sequential-digits/
 
 package sequentialdigit;
+
 import java.util.*;
+
+interface Mathfunc
+{
+    long doIt(long arg);
+}
 
 class Solution
 {
@@ -17,10 +15,31 @@ class Solution
     {
         if (low < 10 || high > 1000000000L)
             throw new IllegalArgumentException("bad param");
+        
+        Mathfunc numlen = (long num) ->
+        {
+            int count = 0;
+            while (num > 0) { num /= 10; count ++; }
+            return count;
+        };
 
-        int  size = getLength(low);
-        long curr = getStart(size);
-        long incr = getInrement(size);
+        Mathfunc starter = (long size) ->
+        {
+            long ans = 1; int cnt = 1;
+            while (size > 1) { ans *= 10; cnt++; ans += cnt; size--; }
+            return ans;
+        };
+
+        Mathfunc increment = (long size) ->
+        {
+            long ans = 1;
+            while (size > 1) { ans *= 10; ans += 1; size--; }
+            return ans;
+        };
+        
+        int  size = (int) numlen.doIt(low);
+        long curr = starter.doIt(size);
+        long incr = increment.doIt(size);
         long limit = (long) Math.pow(10, size);
         
         List<Integer> ans = new ArrayList<>();
@@ -32,8 +51,8 @@ class Solution
             {
                 limit *= 10;
                 size++;
-                curr = getStart(size);
-                incr = getInrement(size);
+                curr = starter.doIt(size);
+                incr = increment.doIt(size);
             }
             else
                 curr += incr;
@@ -42,50 +61,10 @@ class Solution
         return ans;
     }
 
-    private int getLength(long num)
-    {
-        int count = 0;
-        
-        while (num > 0)
-        {
-            num /= 10;
-            count ++;
-        }
-        
-        return count;
-    }
-    
-    private long getStart(int size)
-    {
-        long ans = 1;
-        int count = 1;
-        
-        while (size > 1)
-        {
-            ans *= 10; count++;
-            ans += count; size--;
-        }
-        
-        return ans;
-    }
-
-    private long getInrement(int size)
-    {
-        long ans = 1;
-        
-        while (size > 1)
-        {
-            ans *= 10; ans += 1; size--;
-        }
-        
-        return ans;
-    }
 }
-
 
 public class SequentialDigit
 {
-
     public static void main(String[] args)
     {
         Solution obj = new Solution();
