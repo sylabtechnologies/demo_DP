@@ -1,9 +1,8 @@
 // https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
+
 package conseqnumbers;
 
-import java.util.*;
-
-// try 2 stack way?
+import java.util.Arrays;
 
 class Solution
 {
@@ -16,44 +15,97 @@ class Solution
         int[] copy = Arrays.copyOf(nums, nums.length);
         Arrays.sort(copy);
         
-        Stack<Integer> stack = new Stack<>();
-        Stack<Integer> skip  = new Stack<>();
-        for (int i = copy.length - 1; i >= 0; i--)
-            stack.push(copy[i]);
-
-        int curr = stack.pop();
-        int mysize = 1;
-        
-        while (!stack.isEmpty())
+        Bucket head = new Bucket(copy[0], 1);
+        Bucket curr = head;
+        for (int i = 1; i < copy.length; i++)
         {
-            int next = stack.pop();
+            int next = copy[i];
             
-            if (next == curr + 1)
+            if (next != curr.number)
             {
-                mysize++;
-                curr = next;
+                Bucket n = new Bucket(next, 1);
+                curr = curr.add(n);
             }
-            else if (next != curr)
-                return false;
-            else
-                skip.push(next);
-            
-            if (mysize == k)
-            {
-                while (!skip.isEmpty())
-                {
-                    Integer i = skip.pop();
-                    stack.push(i);
-                }
-
-                if (stack.isEmpty()) return true;
-                
-                curr = stack.pop();
-                mysize = 1;
-            }
+            else curr.inc();
         }
         
+        boolean start = true;
+        int currNum = 0;
+        int mysize = 0;
+
+        curr = head;
+        while (curr != null)
+        {
+            if (start)
+            {
+                currNum = curr.number;
+                curr.dec();
+                mysize = 1;
+                start = false;
+                curr = curr.next;
+                continue;
+            }
+            
+            if (curr.howMany == 0)
+            {
+               curr = curr.next;
+               continue;
+            }
+           
+            if (currNum + 1 == curr.number)
+            {
+                mysize++;
+                currNum = curr.number;
+                curr.dec();
+                curr = curr.next;
+            }
+            else return false;
+
+            if (mysize == k)
+            {
+                while (head != null && head.howMany == 0 )
+                    head = head.next;
+
+                if (head == null) return true;
+
+                curr = head;
+                start = true;
+            }            
+        }
+
         return false;
+
     }
        
+}
+
+class Bucket
+{
+    final int number;
+    int howMany;
+    Bucket next;
+
+    public Bucket(int number, int howMany)
+    {
+        this.number = number;
+        this.howMany = howMany;
+        this.next = null;
+    }
+
+    public Bucket add(Bucket next)
+    {
+        this.next = next;
+        return next;
+    }
+    
+    public void inc() {howMany++;}
+
+    public void dec()
+    {
+        if (howMany <= 0) throw new IllegalArgumentException("cant do");
+        howMany--;
+    }
+
+    @Override
+    public String toString() { return "[" + number + ", " + howMany + "]"; }
 }
