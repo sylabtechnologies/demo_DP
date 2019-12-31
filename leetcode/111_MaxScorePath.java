@@ -1,9 +1,11 @@
 /**
  * https://leetcode.com/problems/number-of-paths-with-max-score/
  * 
- * make top to bottom path, go down, right or diagon alley
- * design DP waypoints
- * make DP max selector 
+ * flip top to bottom, go down/right/diagon
+ * 
+ * encapsulate waypoint ops
+ * 
+ * select DP max from down/right/diagon
  * 
  */
 
