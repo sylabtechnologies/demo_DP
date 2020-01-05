@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/xor-queries-of-a-subarray/
-// map-on-map as if interval tree (put all onto R?)
+// map-on-map as if interval tree (what if all in R?)
 
 package xorqueries;
 
