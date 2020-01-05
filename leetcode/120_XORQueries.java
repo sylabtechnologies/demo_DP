@@ -1,79 +1,65 @@
-/**
- * Given the array arr of positive integers and the array queries where queries[i] = [Li, Ri],
- * for each query i compute the XOR of elements from Li to Ri (that is, arr[Li]
- * xor arr[Li+1] xor ... xor arr[Ri] ).
- * 
- * CHANGE SEARCH TO CEILING
- */
+// https://leetcode.com/problems/xor-queries-of-a-subarray/
+// map-on-map as if interval tree (put all onto R?)
 
 package xorqueries;
+
 import java.util.*;
 
-class Solution
+public class Solution
 {
     public int[] xorQueries(int[] arr, int[][] queries)
     {
-        Map<Integer, TreeSet<Interval>> map = new TreeMap<>();
+        Map<Integer, TreeMap<Integer, Integer> > map = new HashMap<>();
         
-        // bst
         for (int[] q : queries)
         {
-            Interval iv = new Interval(q[0], q[1]);
+            int x = q[0], y = q[1];
             
-            int key = iv.start;
-            TreeSet<Interval> set = map.get(key);
-            
-            if (set != null)
-                set.add(iv);
+            TreeMap<Integer, Integer> chain = map.get(x);
+            if (chain != null)
+                chain.put(y, 0);
             else
             {
-                set = new TreeSet<>();
-                set.add(iv);
-                map.put(key, set);
+                chain = new TreeMap<>();
+                chain.put(y, -1);
+                map.put(x, chain);
             }
         }
         
-        // System.out.println(map);
-        
-        // do memoization
-        for (Map.Entry<Integer, TreeSet<Interval>> el : map.entrySet())
+        // chain xors
+        for (Map.Entry<Integer, TreeMap<Integer, Integer> > row : map.entrySet())
         {
-            TreeSet<Interval> set = el.getValue();
-
-            Interval prev = null;
+            TreeMap<Integer, Integer> chain = row.getValue();
+            Integer key = row.getKey();
             
-            for (Interval curr : set)
-            {
-                if (prev == null)
-                {
-                    prev = curr;
-                    prev.xor = getXor(arr, prev.start, prev.end);
-                    continue;
-                }
-
-                int nextXor = getXor(arr, prev.end+1, curr.end);
-                curr.xor = prev.xor  ^ nextXor;
-                prev = curr;
-            }
-        }
-
-        int[] res = new int[queries.length];
-        
-        for (int i = 0; i < res.length; i++)
-        {
-            Interval iv = new Interval(queries[i][0], queries[i][1]);
+            Integer prev = null;
+            int xor = 0;
             
-            Iterator<Interval> iter = map.get(queries[i][0]).iterator();
-            while (iter.hasNext())
+            for (Map.Entry<Integer, Integer> elem : chain.entrySet())
             {
-                Interval next = iter.next();
+                Integer next = elem.getKey();
                 
-                if (next.start == queries[i][0] && next.end == queries[i][1])
+                if (prev == null)
+                    xor = getXor(arr, key, next);
+                else
                 {
-                    res[i] = next.xor;
-                    break;
+                    int nextXor = getXor(arr, prev + 1, next);
+                    xor = xor ^ nextXor;
                 }
+                
+                prev = next;
+                chain.put(next, xor);
             }
+        }
+        
+        int[] res = new int[queries.length];
+        int count = 0;
+        
+        for (int[] q  : queries)
+        {
+            TreeMap<Integer, Integer> chain = map.get(q[0]);
+            res[count] = chain.get(q[1]);
+            count++;
         }
         
         return res;
@@ -88,58 +74,6 @@ class Solution
             ans = ans ^ arr[i];
 
         return ans;
-    }
-    
-    class Interval implements Comparable<Interval>
-    {
-        int start;
-        int end;
-        int length;
-        int xor;
-        
-        public Interval(int a, int b)
-        {
-            if (a > b)
-                throw new IllegalArgumentException("bad interval " + a + b);
-
-            start = a;
-            end = b;
-            length = b - a;
-        }
-        
-        @Override
-        public int compareTo(Interval ii)
-        {
-            if (this.start < ii.start) return -1;
-            if (this.start > ii.start) return +1;
-            if (this.length < ii.length) return -1;
-            if (this.length > ii.length) return +1;
-            return  0;    
-        }        
- 
-        @Override
-        public String toString()
-        {
-            return "[" +start + ", " + end + "]";
-        }        
-
-        // check null then cast
-        @Override
-        public boolean equals(Object o)
-        {
-            if (o == null) return false;
-            if (o instanceof Interval)
-            {
-                Interval other = (Interval) o;
-                
-                if (start == other.start && end == other.end)
-                    return true;
-                else
-                    return false;
-            }
-            else return false;
-        }
-        
     }
     
 }
