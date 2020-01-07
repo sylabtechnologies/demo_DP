@@ -1,5 +1,6 @@
 // https://leetcode.com/problems/print-in-order/
-// atomic sync OK?, https://docs.oracle.com/javase/tutorial/essential/concurrency/atomicvars.html
+// atomic access OK: https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html
+// https://stackoverflow.com/questions/57215749/why-does-it-seem-like-two-threads-are-accessing-one-lock-in-my-code!
 
 package printinorder;
 
