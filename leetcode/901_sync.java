@@ -1,6 +1,4 @@
 // https://leetcode.com/problems/print-in-order/
-// atomic access OK: https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html
-// https://stackoverflow.com/questions/57215749/why-does-it-seem-like-two-threads-are-accessing-one-lock-in-my-code!
 
 package printinorder;
 
@@ -8,47 +6,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class Foo
 {
-    AtomicInteger order = new AtomicInteger();
+    private volatile int order = 1;
 
-    public Foo()
+    public Foo() {}
+
+    private void waiter(int cnd) throws InterruptedException
     {
-        order.set(1);
+        while(order != cnd) 
+            wait(0,1);
     }
 
     public synchronized void first(Runnable printFirst) throws InterruptedException
     {
-        while (true)
-        {
-            if (order.get() == 1)
-            {
-                printFirst.run();
-                order.set(2);
-                break;
-            }
-        }
+        waiter(1);
+        printFirst.run();
+        order = 2;
+        notifyAll();
     }
 
     public synchronized void second(Runnable printSecond) throws InterruptedException {
-        while (true)
-        {
-            if (order.get() == 2)
-            {
-                printSecond.run();
-                order.set(3);
-                break;
-            }
-        }
+        waiter(2);
+        printSecond.run();
+        order = 3;
+        notifyAll();
     }
 
     public synchronized void third(Runnable printThird) throws InterruptedException {
-        while (true)
-        {
-            if (order.get() == 3)
-            {
-                printThird.run();
-                break;
-            }
-        }
+        waiter(3);
+        printThird.run();
+        notifyAll();
     }
     
 }
