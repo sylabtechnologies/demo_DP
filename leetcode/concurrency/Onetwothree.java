@@ -1,3 +1,6 @@
+// sync on this:
+// (IllegalMonitorStateException - if the current thread is not the owner of this object's monitor)
+
 package onetwothree;
 
 class Foo
