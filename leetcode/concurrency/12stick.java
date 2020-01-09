@@ -1,72 +1,60 @@
-// sync on this:
-// (IllegalMonitorStateException - if the current thread is not the owner of this object's monitor)
-// => make a lock?
-
-/*
-    class MyLock
-    {
-        private volatile int start;
-        private final int max;
-        
-        public MyLock(int start, int max)
-        {
-            this.start = start;
-            this.max   = max;
-        }
-        
-        private synchronized void waitTill(int cnd) throws InterruptedException
-        {
-            while(start != cnd)
-            {
-                System.out.println("wait for " + cnd);
-                wait(300);
-            }
-                
-        }
-
-        private synchronized void click()
-        {
-            if (start < max )start++;
-            notifyAll();
-        }
-    }
-*/
+/// stuck in gear 3
 
 package onetwothree;
+import java.util.concurrent.locks.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class Foo
 {
-    private volatile int order = 1;
+    AtomicInteger order = new AtomicInteger(1);
+    private final Lock lock = new ReentrantLock();
+    private final Condition next = lock.newCondition();
 
     public Foo() {}
 
     private void waiter(int cnd) throws InterruptedException
     {
-        while(order != cnd) 
-            wait(0,1);
+        while(order.get() != cnd)
+        {
+            lock.lock();
+            try
+            {
+                next.await();
+            } finally {lock.unlock();}
+        }
     }
 
-    public synchronized void first(Runnable printFirst) throws InterruptedException
+    private void waker() throws InterruptedException
+    {
+        lock.lock();
+        try
+        {
+            next.signalAll();
+        } finally {lock.unlock();}
+    }
+    
+    
+    public void first(Runnable printFirst) throws InterruptedException
     {
         waiter(1);
         printFirst.run();
-        order = 2;
-        notifyAll();
+        order.set(2);
+        waker();
     }
 
-    public synchronized void second(Runnable printSecond) throws InterruptedException {
+    public synchronized void second(Runnable printSecond) throws InterruptedException
+    {
         waiter(2);
         printSecond.run();
-        order = 3;
-        notifyAll();
+        order.set(2);
+        waker();
     }
 
-    public synchronized void third(Runnable printThird) throws InterruptedException {
+    public synchronized void third(Runnable printThird) throws InterruptedException
+    {
         waiter(3);
         printThird.run();
-        notifyAll();
     }
-    
 }
 
 public class Onetwothree
