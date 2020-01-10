@@ -1,135 +1,87 @@
-// sync on this:
-// (IllegalMonitorStateException - if the current thread is not the owner of this object's monitor)
-// => make a lock?
-
-/*
-    class MyLock
-    {
-        private volatile int start;
-        private final int max;
-        
-        public MyLock(int start, int max)
-        {
-            this.start = start;
-            this.max   = max;
-        }
-        
-        private synchronized void waitTill(int cnd) throws InterruptedException
-        {
-            while(start != cnd)
-            {
-                System.out.println("wait for " + cnd);
-                wait(300);
-            }
-                
-        }
-
-        private synchronized void click()
-        {
-            if (start < max )start++;
-            notifyAll();
-        }
-    }
-*/
-
 package onetwothree;
-
-class Foo
-{
-    private volatile int order = 1;
-
-    public Foo() {}
-
-    private void waiter(int cnd) throws InterruptedException
-    {
-        while(order != cnd) 
-            wait(0,1);
-    }
-
-    public synchronized void first(Runnable printFirst) throws InterruptedException
-    {
-        waiter(1);
-        printFirst.run();
-        order = 2;
-        notifyAll();
-    }
-
-    public synchronized void second(Runnable printSecond) throws InterruptedException {
-        waiter(2);
-        printSecond.run();
-        order = 3;
-        notifyAll();
-    }
-
-    public synchronized void third(Runnable printThird) throws InterruptedException {
-        waiter(3);
-        printThird.run();
-        notifyAll();
-    }
-    
-}
+import java.util.List;
 
 public class Onetwothree
 {
     public static void main(String[] args) throws InterruptedException
     {
-        new Tester("second");
-        Thread.sleep(5);
-        new Tester("third");
-        Thread.sleep(5);
-        new Tester("first");
-    }
-    
-}
+        List<Integer> order = RUtil.getRandomList();
+        
+        String[] msg = {"first ", "second ", "third "};
+        Foo ff = new Foo();
 
-class Tester extends Thread
-{
-    static Foo f = new Foo();
-
-    public Tester(String s)
-    {
-        this.setName(s);
-        this.start();
-    }
-
-    @Override
-    public void run()
-    {
-        Runit r = new Runit(this.getName());
-
-        try
+        Thread[] tt = new Thread[3];
+        tt[0] = new Thread( new Runnable()
         {
-            switch (this.getName())
-            {
-                case "first":
-                    f.first(r);
-                    break;
+        @Override
+        public void run() {
+            try {
+                ff.first( () -> System.out.print(msg[0]));
+            } catch (InterruptedException ex) {}
+        }
+        });
 
-                case "second":
-                    f.second(r);
-                    break;
+        tt[1] = new Thread( new Runnable()
+        {
+        @Override
+        public void run() {
+            try {
+                ff.second( () -> System.out.print(msg[1]));
+            } catch (InterruptedException ex) {}
+        }
+        });
 
-                case "third":
-                    f.third(r);
-                    break;
-
-                default: throw new IllegalArgumentException();
-            }
-        } catch (InterruptedException ex) {}
+        tt[2] = new Thread( new Runnable()
+        {
+        @Override
+        public void run() {
+            try {
+                ff.third( () -> System.out.print(msg[2]));
+            } catch (InterruptedException ex) {}
+        }
+        });
+        
+        System.out.println(order);
+        for (int o : order)
+        {
+            tt[o - 1].start();
+        }
+        
     }
 }
 
-class Runit implements Runnable
+// parallel threads will wait for 1 2 3
+class Foo
 {
-    String printit;
+    private volatile int order;
 
-    public Runit(String printit) {
-        this.printit = printit;
+    public Foo()
+    {
+        order = 1;
     }
 
-    @Override
-    public void run()
+    private synchronized void waitForAndInc(int cnd, Runnable print) throws InterruptedException
     {
-        System.out.print(printit);
+        while(order != cnd) 
+            wait();
+
+        order++;
+        print.run();
+        
+        notifyAll();
+    }
+
+    public void first(Runnable printFirst) throws InterruptedException
+    {
+        waitForAndInc(1, printFirst);
+    }
+
+    public void second(Runnable printSecond) throws InterruptedException {
+        waitForAndInc(2, printSecond);
+    }
+
+    public void third(Runnable printThird) throws InterruptedException {
+        waitForAndInc(3, printThird);
     }
 }
+
