@@ -4,7 +4,8 @@
  * 
  * hl: find uniq chars, test repeats
  * hl2: freqMax = 26 can RabinKarp
- * 
+ * hl max = count charseq hash for each substring in dp
+ * then compare candidates
  */
 
 package echosubstrings;
