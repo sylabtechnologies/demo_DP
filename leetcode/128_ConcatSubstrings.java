@@ -6,6 +6,9 @@
  * hl2: freqMax = 26 can RabinKarp
  * hl max = count charseq hash for each substring in dp
  * then compare candidates
+ * 
+ * hl3: delete uniq char substr
+ * hl31: RK
  */
 
 package echosubstrings;
