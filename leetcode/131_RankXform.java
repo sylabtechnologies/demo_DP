@@ -9,31 +9,16 @@ class Solution
         if (arr.length == 0) return new int[0];
         
         TreeMap<Integer, Integer> rank = new TreeMap<>();
-        
         for (int i : arr) rank.put(i, 0);
 
         int curr = 0;
         for (Map.Entry<Integer, Integer> entry : rank.entrySet())
-        {
-            if (curr == 0)
-            {
-                int key = entry.getKey();
-                entry.setValue(1);
-                curr = 1;
-                continue;
-            }
-            
             entry.setValue(++curr);
-        }
         
         int[] res = new int[arr.length];
         int count = 0;
-        
         for (int i : arr)
-        {
-            res[count] = rank.get(i);
-            count++;
-        }
+            res[count++] = rank.get(i);
         
         return res;
     }
