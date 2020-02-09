@@ -11,14 +11,14 @@ class Solution
             currSum += arr[i];
         
         int ans = 0;
+        if (currSum >= aggr) ans++;
+
         for (int i = k; i < arr.length; i++)
         {
-            if (currSum >= aggr) ans++;
-            
             currSum = currSum - arr[i-k] + arr[i];
+            if (currSum >= aggr) ans++;
         }
 
-        if (currSum >= aggr) ans++;
         return ans;
     }
 }
