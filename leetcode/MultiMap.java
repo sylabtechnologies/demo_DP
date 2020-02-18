@@ -1,12 +1,14 @@
 /*
- * <int, int> multimap, use hash but provide ascending keys
+ * <int, int> multimap, use hash, give ascending keys on request
  */
+
 package weakrows;
 import java.util.*;
 
 public class MultiMap
 {
-    HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+    private HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+    private ArrayList<Integer> keys = new ArrayList<>();
 
     public void put(Integer key, Integer val)
     {
@@ -16,6 +18,7 @@ public class MultiMap
         {
             row = new ArrayList<>();
             map.put(key, row);
+            keys.add(key);
         }
 
         row.add(val);
@@ -26,14 +29,12 @@ public class MultiMap
         return map.get(key);
     }
     
-    public ArrayList<Integer> getKeys()
+    public ArrayList<Integer> getKeys(boolean sorted)
     {
         ArrayList<Integer> ans = new ArrayList<>();
-        
-        for (Map.Entry<Integer, ArrayList<Integer>> entry : map.entrySet())
-            ans.add(entry.getKey());
-        
-        Collections.sort(ans);
+        ans.addAll(keys);
+
+        if (sorted) Collections.sort(ans);
         return ans;
     }
 
