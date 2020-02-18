@@ -1,14 +1,12 @@
 // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
-// *ERROR CLR* map events to each day, attend closing soonest
-// clear the logic, conflict 1-4 and 2-2?
+// from Gordon: multimap wont fit all & conflict 3-3
+// clear the logic and redefine as busy intervals
 
 package eventsattended;
 import java.util.*;
 
 class Solution
 {
-    private static int testCase = 0;
-    
     public int maxEvents(int[][] events)
     {
         if (events == null) return 0;
@@ -19,35 +17,32 @@ class Solution
         for (int i = 0; i < len; i++)
             map.put(events[i][0], events[i][1]);
         
-        List<Integer> days = map.getKeys();
+        List<Integer> days = map.getKeys(true);
         int res = 0;
 
-        System.out.println("\ttest " + (++testCase));
+//        System.out.println("test " + (++testCase));
         System.out.println(days);
         
-        int current = 0;
+        int dayNo = 0;
         for (Integer d : days)
         {
-            if (current == 0)
-            {
-                current = d;
-            }
-            else
-            {
-                if (d > current)
-                    continue;
-            }
-            
             List<Integer> row = map.getRow(d);
             Collections.sort(row);
             System.out.println(row);
             
+            boolean startRow = true;
             for (Integer time : row)
             {
-                if (current <= time)
+                if (startRow)
                 {
-                    current++;
+                    startRow = false;
+                    if (dayNo < d) dayNo = d;
+                }
+
+                if (dayNo <= time)
+                {
                     res++;
+                    dayNo++;
                 }
             }
             
@@ -62,8 +57,10 @@ public class EventsAttended
 
     public static void main(String[] args)
     {
-        int[][] events = {{1,4},{4,4},{2,2},{3,4},{1,1}};
+//        int[][] events = {{1,4},{4,4},{2,2},{3,4},{1,1}};
 //        int[][] events = {{1,1},{1,2},{2,2}};
+
+        int[][] events = {{1,2},{1,2},{3,3},{1,5},{1,5}};
         Solution obj = new Solution();
         System.out.println(obj.maxEvents(events));
     }
