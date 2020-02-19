@@ -1,6 +1,6 @@
 // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
-/// Gordon: multimap by last day, sort by first day
-/// Jesse:  mark attended days w hashset
+/// multimap by last day, sort by first day
+/// Diana:  mark attended days via hashset
 
 package eventsattended;
 import java.util.*;
