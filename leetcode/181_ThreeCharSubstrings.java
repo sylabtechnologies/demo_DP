@@ -1,76 +1,120 @@
-/// visited! more obj!
+/// MMz COORDS & super4encap
+// fix factorials
 
 package threecharsubstrings;
-import java.util.Arrays;
+import java.util.*;
 
 class Solution
 {
-    private static final int OKSIGN = 3; 
     private static final char LOW_A = 'a';
-
-    public static int numberOfSubstrings(String s)
+    private static final int  OKSIGN = 3;
+    
+    private int[][] dp;
+    private int[] mySignature;
+    private List<ArrayList<Integer>> allInd;
+    
+    public int numberOfSubstrings(String s)
     {
         if (s == null || s.length() < 3) return 0;
+        int oldlen = s.length();
 
         char[] sa = s.toCharArray();
-        int len = s.length();
+        sa = unique(sa);
+        int len = sa.length;
+        int trunc = (oldlen == len) ? 1 : oldlen - len;
 
         if (len == 3)
             return sumFreq(freq3(sa, 0, 3)) == OKSIGN ? 1 : 0;
-
-        int[][] dp = new int[len - 2][];
-        int[] sign = new int[len - 2];
-
+        
         // init
+        dp = new int[len - 2][];
+        mySignature = new int[len - 2];
+
         int count = 0;
         for (int i = 0; i < len - 2; i++)
         {
             dp[i] = freq3(sa, i, i + 3);
-            sign[i] = sumFreq(dp[i]) == OKSIGN ? 1 : 0;
-            if (sign[i] == 1) count++;
+            mySignature[i] = sumFreq(dp[i]);
+            if (mySignature[i] == OKSIGN) count++;
+        }
+
+        allInd = new ArrayList<>();
+        allInd.add(new ArrayList<>());
+        allInd.add(new ArrayList<>());
+        allInd.add(new ArrayList<>());
+        for (int i = 3; i < len; i++)
+        {
+            ArrayList<Integer> ref = allInd.get(getIndex(sa[i]));
+            ref.add(i);
+        }
+
+//        System.out.println(Arrays.toString(sa));
+//        System.out.println(allInd);
+        
+        for (int start = 0; start + 3 < len; start++)
+        {
+//            char[] prn = Arrays.copyOfRange(sa, start, start + 4);
+//            System.out.println(Arrays.toString(prn));
+            
+            if (mySignature[start] == OKSIGN)
+                count += len - start - 3;
+            else
+            {
+                // 5 - 3
+                int farthest = findMissing(start);
+                
+                if (farthest >= 0)
+                    count += len - farthest;
+            }
+
         }
         
-//        System.out.println(Arrays.toString(sa));
+        return count * trunc;
+    }
 
-        int[] visited = new int[len];
-        for (int fin = 4; fin <= len; fin++)
+    /// find farthest missing
+    private int findMissing(int start)
+    {
+        int find = OKSIGN - mySignature[start];
+        ArrayList<Integer> found = new ArrayList<>();
+        
+        for (int i = 0; i < 3; i++)
         {
-            for (int start = 0; start + fin - 1 < len; start++)
+            int freq  = dp[start][i];
+            if (freq == 1) continue;
+
+            ArrayList<Integer> ref = allInd.get(i);
+            for (Integer pos : ref)
             {
-                if (visited[start] == 1) continue;
-
-//                char[] prn = Arrays.copyOfRange(sa, start, start + fin);
-//                System.out.println(Arrays.toString(prn));
-
-                if (sign[start] == 1)
+                if (pos >= start + 3)
                 {
-                    visited[start] = 1;
-                    count += len - start - fin + 1;
-                }
-                else
-                {
-                    char newChar = sa[start + fin - 1];
-                    int ind  = (int)(newChar - LOW_A);
-
-                    // make stronger
-                    if (dp[start][ind] != 1)
-                    {
-                        dp[start][ind] = 1;
-                        sign[start] = sumFreq(dp[start]) == OKSIGN ? 1 : 0;
-                        if (sign[start] == 1)
-                        {
-                            visited[start] = 1;
-                            count += len - start - fin + 1;
-                        }
-                    }
-
+                    found.add(pos);
+                    break;
                 }
             }
         }
-
-        return count;
+        
+        if (found.size() != find)
+            return -1;
+        else
+            return Collections.max(found);
     }
-
+    
+    private static int getIndex(char a)
+    {
+        switch(a)
+        {
+            case 'a':
+                return 0;
+            case 'b':
+                return 1;
+            case 'c':
+                return 2;
+            default:
+                throw new IllegalArgumentException("numberOfSubstrings");
+        }
+    }
+    
     private static int sumFreq(int[] freq)
     {
         int sum = 0;
@@ -92,16 +136,38 @@ class Solution
 
         return freq;
     }
+
+    private char[] unique(char[] sa)
+    {
+        int len = sa.length;
+        char[] uniq = new char[len];
+        uniq[0] = sa[0];
+        int curr = 0;
+        
+        for (int i = 1; i < len; i++)
+        {
+            if (uniq[curr] != sa[i])
+            {
+                curr++;
+                uniq[curr] = sa[i];
+            }
+        }
+                
+        char[] res = Arrays.copyOfRange(uniq, 0, curr + 1);
+        return res;
+    }
 }
 
 public class ThreeCharSubstrings
 {
     public static void main(String[] args)
     {
-//        System.out.println(Solution.numberOfSubstrings("aabacaabbcacccbcbaaacbcaacc"));
-//        System.out.println(Solution.numberOfSubstrings("aaabc"));
-        System.out.println(Solution.numberOfSubstrings("acbbcac"));
-//        System.out.println(Solution.numberOfSubstrings("abcabc"));
+        Solution sol = new Solution();
+        
+//        System.out.println(sol.numberOfSubstrings("aabacaabbcacccbcbaaacbcaacc"));
+        System.out.println(sol.numberOfSubstrings("aaacb"));
+//        System.out.println(sol.numberOfSubstrings("ababbbc"));
+        System.out.println(sol.numberOfSubstrings("abcabc"));
     }
     
 }
