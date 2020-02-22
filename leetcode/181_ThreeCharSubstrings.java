@@ -1,3 +1,5 @@
+/// visited! more obj!
+
 package threecharsubstrings;
 import java.util.Arrays;
 
@@ -27,30 +29,42 @@ class Solution
             sign[i] = sumFreq(dp[i]) == OKSIGN ? 1 : 0;
             if (sign[i] == 1) count++;
         }
+        
+//        System.out.println(Arrays.toString(sa));
 
-        for (int fin = 3; fin < len; fin++)
+        int[] visited = new int[len];
+        for (int fin = 4; fin <= len; fin++)
         {
-            for (int start = 0; start + fin < len; start++)
+            for (int start = 0; start + fin - 1 < len; start++)
             {
-                // char[] prn = Arrays.copyOfRange(sa, start, start + fin + 1);
-                // System.out.println(Arrays.toString(prn));
+                if (visited[start] == 1) continue;
+
+//                char[] prn = Arrays.copyOfRange(sa, start, start + fin);
+//                System.out.println(Arrays.toString(prn));
 
                 if (sign[start] == 1)
                 {
-                    count++;
-                    continue;
+                    visited[start] = 1;
+                    count += len - start - fin + 1;
                 }
+                else
+                {
+                    char newChar = sa[start + fin - 1];
+                    int ind  = (int)(newChar - LOW_A);
 
-                char newChar = sa[start + fin];
-                int ind  = (int)(newChar - LOW_A);
+                    // make stronger
+                    if (dp[start][ind] != 1)
+                    {
+                        dp[start][ind] = 1;
+                        sign[start] = sumFreq(dp[start]) == OKSIGN ? 1 : 0;
+                        if (sign[start] == 1)
+                        {
+                            visited[start] = 1;
+                            count += len - start - fin + 1;
+                        }
+                    }
 
-                // make stronger
-                if (dp[start][ind] == 1) continue;
-
-                dp[start][ind] = 1;
-                sign[start] = sumFreq(dp[start]) == OKSIGN ? 1 : 0;
-
-                if (sign[start] == 1) count++;
+                }
             }
         }
 
@@ -84,8 +98,10 @@ public class ThreeCharSubstrings
 {
     public static void main(String[] args)
     {
-        System.out.println(Solution.numberOfSubstrings("aabacaabbcacccbcbaaacbcaacc"));
-        System.out.println(Solution.numberOfSubstrings("aaabc"));
+//        System.out.println(Solution.numberOfSubstrings("aabacaabbcacccbcbaaacbcaacc"));
+//        System.out.println(Solution.numberOfSubstrings("aaabc"));
+        System.out.println(Solution.numberOfSubstrings("acbbcac"));
+//        System.out.println(Solution.numberOfSubstrings("abcabc"));
     }
     
 }
