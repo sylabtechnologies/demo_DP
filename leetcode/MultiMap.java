@@ -1,18 +1,14 @@
-/*
- * <int, int> multimap, use hash, give ascending keys on request
- */
-
-package weakrows;
+package calendar;
 import java.util.*;
 
-public class MultiMap
+public class MultiMap<K extends Comparable<K>, V>
 {
-    private HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-    private ArrayList<Integer> keys = new ArrayList<>();
+    private HashMap<K, ArrayList<V> > map = new HashMap<>();
+    private ArrayList<K> keys = new ArrayList<>();
 
-    public void put(Integer key, Integer val)
+    public void put(K key, V val)
     {
-        ArrayList<Integer> row = map.get(key);
+        ArrayList<V> row = map.get(key);
 
         if (row == null)
         {
@@ -24,14 +20,14 @@ public class MultiMap
         row.add(val);
     }
 
-    public ArrayList<Integer> getRow(Integer key)
+    public ArrayList<V> getRow(K key)
     {
         return map.get(key);
     }
     
-    public ArrayList<Integer> getKeys(boolean sorted)
+    public ArrayList<K> getKeys(boolean sorted)
     {
-        ArrayList<Integer> ans = new ArrayList<>();
+        ArrayList<K> ans = new ArrayList<>();
         ans.addAll(keys);
 
         if (sorted) Collections.sort(ans);
