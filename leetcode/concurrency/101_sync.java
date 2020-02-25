@@ -2,39 +2,37 @@
 
 package printinorder;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 class Foo
 {
-    private volatile int order = 1;
+    private volatile int order;
 
-    public Foo() {}
+    public Foo()
+    {
+        order = 1;
+    }
 
-    private void waiter(int cnd) throws InterruptedException
+    private synchronized void waitForAndInc(int cnd, Runnable print) throws InterruptedException
     {
         while(order != cnd) 
-            wait(0,1);
+            wait();
+
+        order++;
+        print.run();
+        
+        notifyAll();
     }
 
-    public synchronized void first(Runnable printFirst) throws InterruptedException
+    public void first(Runnable printFirst) throws InterruptedException
     {
-        waiter(1);
-        printFirst.run();
-        order = 2;
-        notifyAll();
+        waitForAndInc(1, printFirst);
     }
 
-    public synchronized void second(Runnable printSecond) throws InterruptedException {
-        waiter(2);
-        printSecond.run();
-        order = 3;
-        notifyAll();
+    public void second(Runnable printSecond) throws InterruptedException {
+        waitForAndInc(2, printSecond);
     }
 
-    public synchronized void third(Runnable printThird) throws InterruptedException {
-        waiter(3);
-        printThird.run();
-        notifyAll();
+    public void third(Runnable printThird) throws InterruptedException {
+        waitForAndInc(3, printThird);
     }
-    
+
 }
