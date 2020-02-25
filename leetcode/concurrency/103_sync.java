@@ -1,53 +1,45 @@
 // https://leetcode.com/problems/print-zero-even-odd/submissions/
-// just wait for it
+// ??? no dry!
 
 class ZeroEvenOdd {
-    private int n;
+    private final int n;
     private volatile int order = 0;
 
     public ZeroEvenOdd(int n) {
         this.n = n;
     }
 
-    // sync for waiting
-    public synchronized void zero(IntConsumer printNumber) throws InterruptedException
+    private synchronized void waitForCndr(int cnd, IntConsumer printNumber, int number) throws InterruptedException
     {
+        while(order % 3 != cnd) 
+            wait();
+
+        order++;
+
+        printNumber.accept(number);
+        notifyAll();
+    }
+
+    // printNumber.accept(x) outputs "x", where x is an integer.
+    public void zero(IntConsumer printNumber) throws InterruptedException {
         for(int i = 0; i < n; i++)
         {
-            waiter(0);
-            printNumber.accept(0);
-            order = i % 2 + 1;
-            notifyAll();
+            waitForCndr(0, printNumber, 0);
     	}        
     }
 
-    // sync for waiting
-    public synchronized void even(IntConsumer printNumber) throws InterruptedException
-    {
-        for(int i = 2; i <= n; i+=2)
+    public void even(IntConsumer printNumber) throws InterruptedException {
+        for(int i = 0; i < n; i++)
         {
-            waiter(2);
-            printNumber.accept(i);
-            order = 0;
-            notifyAll();
+            waitForCndr(1, printNumber, i);
     	}        
     }
 
-    // sync for waiting
-    public synchronized void odd(IntConsumer printNumber) throws InterruptedException
-    {
-        for(int i = 1; i <= n; i+=2)
+    public void odd(IntConsumer printNumber) throws InterruptedException {
+        for(int i = 0; i < n; i++)
         {
-            waiter(1);
-            printNumber.accept(i);
-            order = 0;
-            notifyAll();
+            waitForCndr(2, printNumber, i);
     	}        
     }
 
-    private void waiter(int cnd) throws InterruptedException
-    {
-        while(order != cnd) 
-            wait(0,1);
-    }
 }
