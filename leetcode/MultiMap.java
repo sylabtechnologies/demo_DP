@@ -44,4 +44,9 @@ public class MultiMap<K extends Comparable<K>, V>
         return ans;
     }
     
+    @Override
+    public String toString()
+    {
+        return map.toString();
+    }
 }
