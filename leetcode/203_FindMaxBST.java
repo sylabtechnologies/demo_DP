@@ -9,8 +9,11 @@ class Solution
             
     public int maxSumBST(TreeNode root)
     {
-        maxSum = Integer.MIN_VALUE;
-        int bstSum = checkBST(root);
+        maxSum = 0;
+        
+        int topSum = checkBST(root);
+        maxSum = Math.max(topSum, maxSum);
+        
         return maxSum;
     }
 
@@ -30,7 +33,7 @@ class Solution
         if (root.left != null)
         {
             lres = checkBST(root.left);
-            if (lres < 0)
+            if (lres < 0) // return valid, sum tuple?
                 isBST = false;
             else
                 if (lres > maxSum) maxSum = lres;
@@ -39,7 +42,7 @@ class Solution
         if (root.right != null)
         {
             rres = checkBST(root.right);
-            if (rres < 0)
+            if (rres < 0) // return valid, sum tuple?
                 isBST = false;
             else 
                 if (rres > maxSum) maxSum = rres;
