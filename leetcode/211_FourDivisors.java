@@ -1,7 +1,7 @@
 package fourdivisors;
 import java.util.*;
 
-// 8 = 1 2 4 8
+// 8 = 1 2 4 8  = RECALC W/ ONLY ONE PRIME AND / ALSO PRIME
 
 class Solution 
 {
