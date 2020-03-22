@@ -8,7 +8,6 @@ class Solution
 {
     private static final int SIZE = 320;
     private static final Set<Integer> primes = getPrimes(SIZE);
-    private static final Set<Integer> morePrimes = getPrimes(50000);
     
     public int sumFourDivisors(int[] nums)
     {
@@ -18,8 +17,7 @@ class Solution
             if (num <= 5) continue;
             
             List<Integer> divs = getDivisors(num);
-            System.out.print(" n = " + num + " : ");
-            System.out.println(divs);
+//            System.out.println(" n = " + num + " : " + divs.toString());
             
             if (divs.size() == 2)
             {
@@ -28,22 +26,17 @@ class Solution
             }
             else if (divs.size() == 1)
             {
-                int thinkOf = divs.get(0);
-                int test = num/thinkOf;
-                
-                if (test == thinkOf) continue;
-                
-                if (getDivisors(test).size() == 1 ^ morePrimes.contains(test))
-                {
-                    ans+= 1 + num + thinkOf + test;
-                }
+                int d = divs.get(0);
+                int test = num / d;
+                if ( test == d*d)
+                    ans+= 1 + num + divs.get(0) + (num/divs.get(0));
             }
         }
 
         return ans;
     }
 
-    private List<Integer> getDivisors(int num)
+    private static List<Integer> getDivisors(int num)
     {
         List<Integer> result = new ArrayList();
 
@@ -97,7 +90,7 @@ public class FourDivisors
         
         int nums[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 //        int nums[] = {7286,18704,70773,8224,91675};
-//        int nums[] = {21, 4, 7};
+//        int nums[] = {90779,36358,90351,75474,32986};
         System.out.println(sl.sumFourDivisors(nums));
     }
     
