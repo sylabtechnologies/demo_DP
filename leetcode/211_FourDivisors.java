@@ -1,95 +1,91 @@
 package fourdivisors;
 import java.util.*;
 
-// 8 = 1 2 4 8  = RECALC W/ ONLY ONE PRIME AND / ALSO PRIME
+// FIX!
+// https://www.dcode.fr/divisors-list-number
 
 class Solution 
 {
-    private static final int SIZE = 50000;
-    private static boolean seekPrimes = true;
-    private static final TreeSet<Integer> primes = new TreeSet<>();
+    private static final int SIZE = 320;
+    private static final Set<Integer> primes = getPrimes(SIZE);
+    private static final Set<Integer> morePrimes = getPrimes(50000);
     
     public int sumFourDivisors(int[] nums)
     {
-        if (seekPrimes) findPrimes();
-        
         int ans = 0;
         for (int num : nums)
         {
-            if (num <= 5) continue;;
+            if (num <= 5) continue;
             
-            int count = 0;
-            int divs[] = {0, 0};
-            for (int p : primes)
+            List<Integer> divs = getDivisors(num);
+            System.out.print(" n = " + num + " : ");
+            System.out.println(divs);
+            
+            if (divs.size() == 2)
             {
-                if (p >= num) break;
-                
-                if (num % p == 0)
-                {
-                    if (count == 2)
-                    {
-                        count++;
-                        break;
-                    }
-
-                    divs[count] = p;
-                    count++;
-                }
+                if (num == (divs.get(0) * divs.get(1)))
+                    ans+= 1 + num + divs.get(0) + divs.get(1);
             }
-            
-            if (count == 2)
+            else if (divs.size() == 1)
             {
-                ans+= 1;                
-                ans+= num + divs[0] + divs[1];
+                int thinkOf = divs.get(0);
+                int test = num/thinkOf;
+                
+                if (test == thinkOf) continue;
+                
+                if (getDivisors(test).size() == 1 ^ morePrimes.contains(test))
+                {
+                    ans+= 1 + num + thinkOf + test;
+                }
             }
         }
 
         return ans;
     }
 
-    private void findPrimes()
+    private List<Integer> getDivisors(int num)
     {
-        int sieve[] = new int[SIZE];
+        List<Integer> result = new ArrayList();
+
+        int count = 0;
+        for (int p : primes)
+        {
+            if (p >= num) break;
+
+            if (num % p == 0)
+            {
+                result.add(p);
+                count++;
+                if (count > 3) break;
+            }
+        }
+
+        return result;
+    }
+    
+    private static TreeSet<Integer> getPrimes(int size)
+    {
+        TreeSet<Integer> result = new TreeSet<>();
+        int sieve[] = new int[size];
         
-        for (int i = 2; i <= SIZE; i++)
+        for (int i = 2; i <= size; i++)
         {
             if (sieve[i-1] == 1) continue;
             
             int delta = i;
-            for (int j = i + delta; j <= SIZE; j += delta)
+            for (int j = i + delta; j <= size; j += delta)
                 sieve[j-1] = 1;
         }
 
-        for (int i = 2; i <= SIZE; i++)
+        for (int i = 2; i <= size; i++)
         {
-            if (sieve[i-1] == 0)
-            {
-                primes.add(i);
-            }
+            if (sieve[i-1] == 0) result.add(i);
         }
         
-        // add other divisors
-        ArrayList<Integer> secondary = new ArrayList<>();
-        
-        for (Integer p : primes)
-        {
-            for (Integer p1 : primes)
-            {
-                int nxt = p*p1;
-                if (nxt > SIZE) break;
-                secondary.add(nxt);
-            }
-        }
-
-        for (Integer i : secondary)
-        {
-            primes.add(i);
-        }
-        
-//        System.out.println(primes);
-        
-        seekPrimes = false;
+//        System.out.println(result);
+        return result;
     }
+
 }
 
 public class FourDivisors
@@ -99,7 +95,9 @@ public class FourDivisors
     {
         Solution sl = new Solution();
         
-        int nums[] = {7286,18704,70773,8224,91675};
+        int nums[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//        int nums[] = {7286,18704,70773,8224,91675};
+//        int nums[] = {21, 4, 7};
         System.out.println(sl.sumFourDivisors(nums));
     }
     
