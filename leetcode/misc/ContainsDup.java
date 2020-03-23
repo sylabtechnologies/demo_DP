@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/contains-duplicate-ii/
+
 package containsdup;
 import java.util.*;
 
@@ -11,34 +13,25 @@ class Solution
         for (int i = 0; i < nums.length; i++)
             map.put(nums[i], i);
 
-        boolean ans = false;
+        boolean found = false;
         List<Integer> keys = map.getKeys(false);
         for (Integer key : keys)
         {
             List<Integer> row = map.getRow(key);
-            int min = Integer.MAX_VALUE;
-            boolean found = false;
             
             for (int i = 1; i < row.size(); i++)
             {
                 int delta = row.get(i) - row.get(i-1);
-                found = true;
-                min = Math.min(min, delta);
-            }
 
-            if (found)
-            {
-                if ( min > k)
+                if (delta <= k)
                 {
-                    ans = false;
-                    break;
+                    found = true;
+                    return found;
                 }
-                else ans = true;
             }
-            
         }
 
-        return ans;
+        return found;
     }
     
 }
