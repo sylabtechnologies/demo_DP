@@ -33,7 +33,6 @@ class Solution
 
         return found;
     }
-    
 }
 
 public class ContainsDup
