@@ -1,10 +1,10 @@
 /// https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+//#D link right view to left view in each subtree
+// & #ama KEY postorder w/ r/l most view #ama7 = BluPtr
 
 package populatewsiblings;
 
-/// #ama# #D = preorder DFS w/ keeping depth and offset
-/// #DD -> model at once
-/// fin = link subtrees w/ right dfs = left dfs
+import java.util.LinkedList;
 
 class Solution
 {
@@ -12,21 +12,29 @@ class Solution
     {
         if (root == null) return null;
 
-        preorder(root);
+        helper(root);
         return root;
     }
 
-    private Node preorder(Node root)
+    private void helper(Node root)
     {
-        System.out.println(" Node " + root.val + ":");
-
-        if (root.left != null)
-        {
-            preorder(root.left);
-            root.left.next = preorder(root.right);
-        }
+        // check only one
+        if (root.left == null) return;
         
-        return root;        
+        helper(root.left);
+        helper(root.right);
+        linkLtoR(root.left, root.right);
+    }
+
+    private void linkLtoR(Node left, Node right)
+    {
+        while (left != null)
+        {
+            left.next = right;
+            
+            left = left.right;
+            right = right.left;
+        }
     }
 }
 
@@ -71,3 +79,4 @@ public class PopulatewSiblings
     }
     
 }
+
