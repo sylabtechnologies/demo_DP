@@ -1,4 +1,4 @@
-/* wc "class + class"
+/* wc "class + class" a4-Dulles = fuzzy
 https://leetcode.com/problems/linked-list-in-binary-tree
 #DDD special tree w/ parents and depth - COMPUTE HASH BACKWARDS, reverse list
 https://www.kirupa.com/developer/actionscript/depth_breadth_search.htm
