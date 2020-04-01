@@ -1,8 +1,7 @@
 package cheapflights;
 import java.util.*;
 
-// Dijktra greedy? Total BFS?
-/// #D D# BFS w/o visits
+//// #DD total Djikstra1 w/ MinHeap and restrictions : is it DFS?
 
 class Solution
 {
