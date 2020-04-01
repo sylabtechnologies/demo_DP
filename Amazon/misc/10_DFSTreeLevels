@@ -3,7 +3,7 @@
 package averagelevel;
 import java.util.*;
 
-///#D = dfs + stack
+///#D = dfs + stack => CONVERT TO RECURSIVE POSTORDER!
 class Solution
 {
     public List<Double> averageOfLevels(TreeNode root)
