@@ -1,0 +1,83 @@
+// https://leetcode.com/problems/average-of-levels-in-binary-tree/
+
+package averagelevel;
+import java.util.*;
+
+///#D = dfs + stack
+class Solution
+{
+    public List<Double> averageOfLevels(TreeNode root)
+    {
+        HashMap<TreeNode, Integer> visited = new HashMap<>();
+
+        LinkedList<TreeNode> stack  = new LinkedList<>(); // use stack
+        LinkedList<Integer> levels = new LinkedList<>(); // use stack
+        stack.add(root); levels.add(0);
+
+        List<Integer> hits = new ArrayList<>();
+        List<Double>  sums = new ArrayList<>();
+        
+        while (!stack.isEmpty())
+        {
+            TreeNode node = stack.removeLast();
+            Integer level = levels.removeLast();
+            
+            Integer visit = visited.get(node);
+            if (visit != null)
+                continue;
+            else
+                visited.put(node, 0);
+            
+            if (node.right != null)
+            {
+                stack.add(node.right);
+                levels.add(level + 1);
+            }
+
+            if (node.left != null)
+            {
+                stack.add(node.left);
+                levels.add(level + 1);
+            }
+            
+            if (level < hits.size())
+            {
+                int val = hits.get(level);
+                hits.set(level, val + 1);
+                Double dval = sums.get(level);
+                sums.set(level, dval + node.val);
+            }
+            else
+            {
+                hits.add(1);
+                sums.add((double) node.val);
+            }
+            
+            System.out.println(node.val + " "  + level);
+        }
+        
+        List<Double> ans = new ArrayList<>();
+        for (int i = 0; i < hits.size(); i++)
+            ans.add(sums.get(i) / hits.get(i));
+        
+        return ans;
+    }
+    
+}
+
+
+public class AverageLevel
+{
+    public static void main(String[] args)
+    {
+        TreeNode rt = new TreeNode(3);
+        rt.addLeft(9);
+        rt.addRight(20);
+        rt.right.addLeft(15);
+        rt.right.addRight(7);
+        
+        Solution sl = new Solution();
+        System.out.println(sl.averageOfLevels(rt));
+    }
+    
+}
