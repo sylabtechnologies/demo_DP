@@ -1,7 +1,6 @@
 package kpalindromes;
 
-// https://leetcode.com/problems/construct-k-palindrome-strings/
-/// #D odd + even count
+// https://leetcode.com/problems/construct-k-palindrome-strings/ #D odd count
 class Solution
 {
     public boolean canConstruct(String s, int k)
@@ -16,24 +15,16 @@ class Solution
             freq[inx]++;
         }
         
-        int evenCount = 0, oddCount = 0;
+        int oddCount = 0;
         for (int i = 0; i < 26; i++)
         {
             if (freq[i] > 0)
             {
-                if (freq[i] % 2 == 0)
-                    evenCount++;
-                else
+                if (freq[i] % 2 == 1)
                     oddCount++;
-                
-//                char key = (char) ((char) 'a' + i);
-//                System.out.println(key + " : " + freq[i]);
             }
 
         }
-        
-//        System.out.println(oddCount);
-//        System.out.println(evenCount);
         
         if (oddCount <= k)
             return true;
