@@ -34,5 +34,6 @@ public class Ransom
 {
     public static void main(String[] args)
     {
+        System.out.println(new Solution().canConstruct("aa", "ab"));
     }
 }
