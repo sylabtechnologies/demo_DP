@@ -1,0 +1,57 @@
+// https://leetcode.com/problems/swap-nodes-in-pairs/
+
+package swapnodes;
+
+import java.util.ArrayList;
+
+class Solution
+{
+    public ListNode swapPairs(ListNode head)
+    {
+        if (head == null) return null;
+        if (head.next == null) return head;
+        
+        /// classic  = head + 1
+        ListNode result = new ListNode(0), curr = result;
+        
+        ListNode tail = head;
+        while (tail != null)
+        {
+            ListNode bit1 = tail;
+            ListNode bit2 = tail.next;
+            
+            if (bit2 != null)
+            {
+                tail = bit2.next;
+                bit1.next = null;
+                bit2.next = null;
+                curr.next = bit2;
+                curr = curr.next;
+                curr.next = bit1;
+                curr = curr.next;
+            }
+            else
+            {
+                curr.next = bit1;
+                break;
+            }
+        }
+                
+        return result.next;
+    }
+}
+
+public class SwapNodes
+{
+    public static void main(String[] args)
+    {
+        ListNode root = new ListNode(1);
+        root.add(new ListNode(2));
+//        root.next.add(new ListNode(3));
+//        root.next.next.add(new ListNode(4));
+//        root.next.next.next.add(new ListNode(5));
+        
+        System.out.println(new Solution().swapPairs(root));
+    }
+    
+}
