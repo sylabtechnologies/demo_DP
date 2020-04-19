@@ -1,4 +1,4 @@
-// https://leetcode.com/contest/biweekly-contest-24/problems/minimum-value-to-get-positive-step-by-step-sum/
+// https://leetcode.com/problems/minimum-value-to-get-positive-step-by-step-sum/
 
 package possteps;
 
