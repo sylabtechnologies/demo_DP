@@ -1,4 +1,4 @@
-package mergelists;
+package convert2bst;
 
 /**
  * interface?
@@ -12,6 +12,16 @@ class ListNode
     ListNode(int x)
     {
         val = x;
+    }
+    
+    void append(int x)
+    {
+        ListNode current = this;
+        
+        while (current.next != null)
+            current = current.next;
+
+        current.next = new ListNode(x);
     }
     
     void add(ListNode next)
@@ -36,3 +46,4 @@ class ListNode
     }
     
 }
+
