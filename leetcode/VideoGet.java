@@ -3,6 +3,8 @@
  * https://stackoverflow.com/questions/42901942/how-do-we-download-a-blob-url-video/50950602
  * 
  * record net req, sort by akamai, loop w/ 1 & append
+ * 
+ * https://stackoverflow.com/questions/2171336/how-do-i-monitor-network-traffic-on-windows-from-the-command-line
  */
 
 package videoget;
