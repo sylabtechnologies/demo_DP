@@ -1,4 +1,6 @@
 /**
+ * https://stackoverflow.com/questions/6624007/internet-usage-monitoring-tool-in-c THEN
+ * 
  * copy mp4 from akamai
  * https://stackoverflow.com/questions/42901942/how-do-we-download-a-blob-url-video/50950602
  * 
