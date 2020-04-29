@@ -1,0 +1,47 @@
+// https://leetcode.com/problems/partition-array-into-three-parts-with-equal-sum/
+
+package array3partion;
+
+class Solution
+{
+    public boolean canThreePartsEqualSum(int[] arr)
+    {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++)
+            sum += arr[i];
+        
+        if (sum % 3 != 0) return false;
+        int third = sum / 3;
+        
+        int x = findIndex(arr, third, 0, arr.length - 1, false);
+        if (x < 0) return false;
+        
+        int right = findIndex(arr, third, arr.length - 1, x + 1, true);
+        return (right >= 0);
+    }
+
+    private int findIndex(int[] nums, int target, int start, int end, boolean goBack)
+    {
+        int i = start, sum = 0;
+        int inc = (goBack) ? -1 : 1;
+        while (i != end)
+        {
+            sum += nums[i];
+            if (sum == target) return i;
+            i = i + inc;
+        }
+            
+        return -1;
+    }
+}
+
+public class Array3partion
+{
+    public static void main(String[] args)
+    {
+        // int arr[] = {0,2,1,-6,6,-7,9,1,2,0,1};
+        int arr[] =  {3,3,6,5,-2,2,5,1,-9,4};
+        System.out.println(new Solution().canThreePartsEqualSum(arr));
+    }
+    
+}
