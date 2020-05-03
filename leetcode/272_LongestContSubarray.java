@@ -3,85 +3,47 @@
 package longestcontsubarray;
 import java.util.*;
 
-/// #TR - 2 ptr optimization
+/// #TR= 2 ptr optimization BUT 2HEAP IS PERFECT
 class Solution
 {
-    public int longestSubarray(int[] nums, int limit)
+    public int longestSubarray(int[] nums, final int limit)
     {
-        LinkedList<SubArr> lst = new LinkedList<>();
-
-        int i = 0, prev = -1;
-        while (i < nums.length)
+        int start = 0, len = 1, maxLen = 1;
+        int localMax = nums[start], localMin = nums[start];
+        boolean reset = false;
+        
+        while (start + len < nums.length)
         {
-            int n = nums[i];
-            
-            SubArr elem;
-            if (n == prev)
+            // go
+            int next = nums[start + len];
+            if (next < localMin)
             {
-                elem = lst.getLast();
-                elem.length++;                
+                if (localMax - next > limit)
+                    reset = true;
+                else
+                    localMin = next;
+            }
+            else if (next > localMax)
+            {
+                if (next - localMin > limit)
+                    reset = true;
+                else
+                    localMax = next;
+            }
+
+            if (reset)
+            {
+                start = start + 1; len = 1; reset = false;
+                localMax = nums[start]; localMin = nums[start];
             }
             else
-                elem = new SubArr(n, i);
-            
-            lst.add(elem);
-            
-            prev = n;
-            i++;
+            {
+                len++;
+                maxLen = Math.max(maxLen, len);
+            }
         }
         
-        int maxsize = 0;
-        while (!lst.isEmpty())
-        {
-            Iterator<SubArr> iter = lst.iterator();
-            while (iter.hasNext())
-            {
-                SubArr next = iter.next();
-                
-                if (maxsize < next.length) maxsize = next.length;
-                
-                int ix = next.startIndex + next.length;
-                if (ix > nums.length - 1)
-                {
-                    iter.remove();
-                    continue;
-                }
-                
-                if (next.canAdvance(nums[ix], limit))
-                    next.advance(nums[ix]);
-                else
-                    iter.remove();
-            }
-            
-        }
-
-        return maxsize;
-    }
-
-    private static class SubArr
-    {
-        int startIndex;
-        int min, max;
-        int length;
-       
-        public SubArr(int n, int location)
-        {
-            min = n; max = n;
-            startIndex = location;
-            length = 0;
-        }
-
-        private boolean canAdvance(int n, int limit)
-        {
-            return Math.abs(min - n) <= limit && Math.abs(max - n) <= limit;
-        }
-
-        private void advance(int n)
-        {
-            min = Math.min(min, n);
-            max = Math.max(max, n);
-            length++;
-        }
+        return maxLen;
     }
 }
 
@@ -91,9 +53,10 @@ public class LongestContSubarray
     {
 //        int test[] = {8,2,4,7};
 //        int test[] = {4,2,2,2,4,4,2,2};
+//        int test[] = {9,10,1,7,9,3,9,9};
 
-        int test[] = {9,10,1,7,9,3,9,9};
-        System.out.println(new Solution().longestSubarray(test, 7));
+        int test[] = {10,1,2,4,7,2};
+        System.out.println(new Solution().longestSubarray(test, 5));
     }
     
 }
