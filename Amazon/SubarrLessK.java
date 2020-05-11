@@ -1,7 +1,7 @@
 package subarrlessk;
 import java.util.*;
 
-// R/D ZHardy-OR
+// R/D GBuffalo
 class Solution
 {
     int currProd;
