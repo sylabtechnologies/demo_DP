@@ -21,7 +21,7 @@ class StockSpanner
         
         if (top > 0)
         {
-            while (priceStack[top-1].price < p)
+            while (priceStack[top-1].price <= p)
             {
                 prevSpan += priceStack[top-1].span;
                 top--;
