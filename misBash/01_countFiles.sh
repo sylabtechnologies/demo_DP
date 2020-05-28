@@ -1,5 +1,4 @@
 # count files in each root subdir
-
 echo $PWD
 echo look into root:
 
