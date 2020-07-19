@@ -1,6 +1,5 @@
-package task18b;
-import java.util.*;
-import java.util.LinkedList;
+package samecode;
+import java.util.Arrays;
 
 class Solution
 {
@@ -8,69 +7,54 @@ class Solution
     
     public int[] countSubTrees(int n, int[][] edges, String labels)
     {
-        int prefix[][] = new int[n][];
-        for (int i = 0; i < n; i++)
-        {
-            prefix[i] = new int[ABCSIZE];
-            int code = labels.charAt(i) - 'a';
-            prefix[i][code] = 1;
-        }
-        
-        boolean process[] = new boolean[n];
-        HashMap<Integer, List<Integer>> adjacency = new HashMap<>();
+        // UG
+        Graph<Integer> g = new Graph<>(n);
         for (int[] e : edges)
         {
-            List<Integer> adj = adjacency.getOrDefault(e[1], new ArrayList<>());
-            adj.add(e[0]);
-            adjacency.put(e[1], adj);
-            process[e[0]] = true;
+            g.addEdge(e[0], e[1]);
+            g.addEdge(e[1], e[0]);
         }
+        
+        int counter[] = new int[ABCSIZE];
+        int result[]  = new int[n];
+        dfs(0, labels, g, counter, result);
+        return result;
+    }
 
-        LinkedList<Integer> bfs = new LinkedList<>();
-        for (int i = 0; i < n; i++)
+    // dfs
+    private void dfs(int node, String labels, Graph<Integer> g, int[] counter, int[] result)
+    {
+        if (result[node] == 0)
         {
-            if (!process[i]) bfs.add(i);
-        }
-
-        boolean visited[] = new boolean[n];
-        while (!bfs.isEmpty())
-        {
-            int node = bfs.removeFirst();
-            if (visited[node]) continue;;
-            visited[node] = true;
+            // visit
+            result[node] = 1;
             
-            List<Integer> adj = adjacency.get(node);
-            
-            if (adj != null)
+            for (Integer child : g.getAdjacency(node))
             {
-                for (Integer next : adj)
+                int childCounter[] = new int[ABCSIZE];
+                
+                if (result[child] == 0)
                 {
-                    bfs.add(next);
-
-                    for (int i = 0; i < ABCSIZE; i++)
-                        prefix[next][i] += prefix[node][i];
+                    dfs(child, labels, g, childCounter, result);
+                    for (int i = 0; i < counter.length; i++)
+                        counter[i] += childCounter[i];
                 }
             }
+
+            int ix = labels.charAt(node) - 'a';
+            counter[ix] += 1;
+            result[node] = counter[ix];
         }
-        
-        int ans[] = new int[n];
-        for (int i = 0; i < n; i++)
-        {
-            int code = labels.charAt(i) - 'a';
-            ans[i] = prefix[i][code];
-        }
-        
-        return ans;
     }
 }
 
-public class Task18B
+public class SameCode
 {
     public static void main(String[] args)
     {
-        int arr[][] = {{0, 2}, {0, 3}, {2, 1}};
-        String str = "aeed";
-        System.out.println(Arrays.toString(new Solution().countSubTrees(4, arr, str)));
+        int arr[][] = {{0, 1}, {0, 2}, {1, 4}, {1, 5}, {2, 3}, {2, 6}};
+        String str = "abaedcd";
+        System.out.println(Arrays.toString(new Solution().countSubTrees(7, arr, str)));
     }
+    
 }
-
