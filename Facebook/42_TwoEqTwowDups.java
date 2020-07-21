@@ -6,79 +6,67 @@ class Solution
     MultiMap<Integer, Integer> map;
     ArrayList<Integer> result;
 
-    public ArrayList<Integer> equal(ArrayList<Integer> nums) {
-        if (nums.size() < 4) {
-            return new ArrayList<>();
-        }
-
+    public ArrayList<Integer> equal(ArrayList<Integer> nums)
+    {
         result = new ArrayList<Integer>();
+        if (nums.size() < 4) return result;
+
         map = new MultiMap<>();
         for (int i = 0; i < nums.size(); i++)
             map.put(nums.get(i), i);
 
         for (int i = 0; i < nums.size() - 3; i++)
-            for (int j = i + 1; j < nums.size() - 2; j++) {
-                ArrayList<Integer> candids = getPairs(nums, i, j, nums.get(i) + nums.get(j));
+        {
+            for (int j = i + 1; j < nums.size() - 2; j++)
+            {
+                for (int k = i + 1; k < nums.size() - 1; k++)
+                {
+                    if (k == j) continue;
 
-                if (!candids.isEmpty()) addOrReplace(i, j, candids);
+                    int target = nums.get(i) + nums.get(j) - nums.get(k);
+                    ArrayList<Integer> row = map.getRow(target);
+                    if (row == null) continue;
+                    
+                    for (int x : row)
+                    {
+                        if (x == j) continue;
+                        if (x <= k) continue;
+                        
+                        addOrUpdate(i, j, k, x);
+                    }
+                    
+                }
             }
+        }
 
         return result;
     }
 
-    private ArrayList<Integer> getPairs(ArrayList<Integer> nums, int ia, int ib, int target)
+    private void addOrUpdate(int i, int j, int x, int y)
     {
-        ArrayList<Integer> ans = new ArrayList<>();
-
-        for (int i = ia + 1; i < nums.size() - 1; i++)
+        if (result.isEmpty())
         {
-            if (i == ib) continue;
-
-            int delta = target - nums.get(i);
-            ArrayList<Integer> row = map.getRow(delta);
-            if (row == null) continue;
-
-            for (Integer ix : row)
-            {
-                if (ix == ib) continue;
-                if (ix <= i)  continue;
-
-                ans.add(i);
-                ans.add(ix);
-            }
+            setResult(i, j, x, y);
+            return;
         }
 
-        return ans;
-    }
-
-    private void addOrReplace(int i, int j, ArrayList<Integer> candids)
-    {
-        for (int k = 0; k < candids.size(); k += 2)
+        if (i < result.get(0))
+              setResult(i, j, x, y);
+        else if (i == result.get(0))
         {
-            if (result.isEmpty())
+            if (j < result.get(1))
+                setResult(i, j, x, y);
+            else if (j == result.get(1))
             {
-                setResult(i, j, candids.get(k), candids.get(k+1));
-                continue;
-            }
-            
-            if (i < result.get(0))
-                setResult(i, j, candids.get(k), candids.get(k+1));
-            else if (i == result.get(0))
-            {
-                if (j < result.get(1))
-                    setResult(i, j, candids.get(k), candids.get(k+1));
-                else if (j == result.get(1))
+                if (x < result.get(2))
+                    setResult(i, j, x, y);
+                else if (x == result.get(2))
                 {
-                    if (candids.get(k) < result.get(2))
-                        setResult(i, j, candids.get(k), candids.get(k+1));
-                    else if (candids.get(k) == result.get(2))
-                    {
-                        if (candids.get(k + 1) < result.get(3))
-                            setResult(i, j, candids.get(k), candids.get(k+1));
-                    }
+                    if (y < result.get(3))
+                        setResult(i, j, x, y);
                 }
             }
-        }
+        }        
     }
 
     private void setResult(int i, int j, int x, int y)
@@ -96,7 +84,6 @@ public class TwoEqTwo
     public static void main(String[] args)
     {
         ArrayList<Integer> test = new ArrayList<>(Arrays.asList(3, 4, 7, 1, 2, 9, 8));
-        System.out.println(new Solution().equal(test));
+        System.out.println(new Solution().equal(test));        
     }
-    
 }
