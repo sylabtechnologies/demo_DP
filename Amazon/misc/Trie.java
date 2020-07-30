@@ -1,4 +1,5 @@
-package trietest;
+package wordbreak2;
+import java.util.*;
 
 class TrieNode 
 { 
@@ -82,5 +83,27 @@ public class Trie
 
         return (pCrawl != null); 
     }
+
+    public List<String> allPrefixes(String s)
+    {
+        ArrayList<String> keys = new ArrayList<>();
+        
+        TrieNode pCrawl = root; 
+        for (int level = 0; level < s.length(); level++) 
+        { 
+            int index = s.charAt(level) - 'a'; 
+
+            if (pCrawl.children[index] == null) break;
+
+            pCrawl = pCrawl.children[index]; 
+            if (pCrawl.isEndOfWord)
+                keys.add(s.substring(0, level + 1));
+        } 
+        
+        return (keys.isEmpty()) ? null : keys ;
+    }
+
+
 }
+
 
