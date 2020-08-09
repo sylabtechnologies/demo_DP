@@ -1,6 +1,6 @@
 // https://leetcode.com/problems/can-convert-string-in-k-moves/
 
-package convert;
+package convertstring;
 import java.util.*;
 
 class Solution
@@ -25,12 +25,10 @@ class Solution
             }
         }
         
-//        System.out.println(delta);
-
         int step = 0;
         while (!delta.isEmpty())
         {
-            TreeSet<Integer> cleanup = new TreeSet<>();
+            ArrayList<Integer> cleanup = new ArrayList<>();
             
             for (Map.Entry<Integer, Integer> entry : delta.entrySet())
             {
@@ -45,19 +43,18 @@ class Solution
             
             step += 26;
             
-            for (Integer cl : cleanup)
-                delta.remove(cl);
+            for (Integer rem : cleanup)
+                delta.remove(rem);
         }
 
         return true;
     }
 }
 
-public class Convert
+public class ConvertString
 {
     public static void main(String[] args)
     {
         System.out.println(new Solution().canConvertString("atmtxzjkz", "tvbtjhvjd", 35));
     }
-    
 }
