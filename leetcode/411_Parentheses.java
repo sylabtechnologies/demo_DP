@@ -63,3 +63,4 @@ public class ParenInsert
         System.out.println(new Solution().minInsertions( "))(()()))()))))))()())()(())()))))()())(()())))()(" ));
     }
 }
+
