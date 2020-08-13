@@ -8,6 +8,8 @@ class Solution
     private Graph<Integer> g;
     public int makeConnected(int n, int[][] connections)
     {
+        /// be sure of spare parts amount
+        //  the rest is to count bfs connected areas
         if (connections.length < n - 1) return -1;
         
         g = new Graph<Integer>(n);
