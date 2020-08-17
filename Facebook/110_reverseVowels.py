@@ -1,4 +1,4 @@
-# J/R https://leetcode.com/problems/reverse-vowels-of-a-string/
+# J/R https://leetcode.com/problems/reverse-vowels-of-a-string/ got it Bedospok
 
 class Solution:
     def reverseVowels(self, s: str) -> str:
