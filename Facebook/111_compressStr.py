@@ -28,7 +28,7 @@ class Solution:
 
             ll = llens[i]
             if ll > 1 :
-                for x in list("%d" % ll) :
+                for x in list(str(ll)) :
                     chars.append(x)
 
         return len(chars)
