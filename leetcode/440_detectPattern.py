@@ -1,4 +1,4 @@
-// https://leetcode.com/contest/weekly-contest-204/problems/detect-pattern-of-length-m-repeated-k-or-more-times/
+## https://leetcode.com/contest/weekly-contest-204/problems/detect-pattern-of-length-m-repeated-k-or-more-times/
 
 class Solution:
     def containsPattern(self, arr: List[int], patternLen: int, pNum: int) -> bool:
@@ -11,15 +11,9 @@ class Solution:
                 test = arr[ i + k * patternLen : i + (k + 1) * patternLen]
                 if test == pattern :
                     count += 1
+                    if count >= pNum : return True
                 else :
                     break
 
-                if count >= pNum : return True
-
         return False
-
-    
-
-
-
 
