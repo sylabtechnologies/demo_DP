@@ -38,6 +38,4 @@ public class Permut
     {
         System.out.println(new Solution().containsNearbyAlmostDuplicate(new int[] {-1,2147483647}, 1, 2147483647 )); 
     }
-    
 }
-
