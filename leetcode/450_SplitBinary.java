@@ -1,21 +1,18 @@
 // https://leetcode.com/problems/number-of-ways-to-split-a-string/
 package binsplit;
+
 import java.util.*;
 
 class Solution
 {
     public int numWays(String s)
     {
-        int count = 0, i = 0, len = s.length();
-        int oneCount[] = new int[len];
-        for (char c : s.toCharArray())
-        {
+        char[] arr = s.toCharArray();
+        int len = arr.length, count = 0;
+        for (char c : arr)
             if (c == '1') count++;
-            oneCount[i++] = count;
-        }
         
         if (count % 3 != 0) return 0;
-        int ans = 0, target = count / 3;
 
         if (count == 0)
         {
@@ -32,30 +29,23 @@ class Solution
             return (int) tmp;
         }
         
-        int start = 0;
-        while (oneCount[start] != target)
-            start++;
-
-        int stop3 = start + 1, stop1 = -1, stop2 = -1;
-        while (oneCount[stop3] <= 2*target)
+        int target = count / 3, target2 = target*2;
+        int ways = 0, more = 0;
+        count = 0;
+        for (char c : arr)
         {
-            if (oneCount[stop3] != target && stop1 < 0)
-                stop1 = stop3;
-            
-            if (oneCount[stop3] == 2*target && stop2 < 0)
-                stop2 = stop3;
+            if (c == '1') count++;
 
-            stop3++;
+            if (count == target) ways++;
+            
+            if (count == target2)
+                more++;
+            
+            if (count > target2) break;
         }
         
-        int ways = stop3 - stop2;
-        for (i = start; i < stop1; i++)
-        {
-             ans += ways;
-             if (ans >= 1_000_000_007) ans = ans - 1_000_000_007;
-       }
- 
-        return ans;
+        long ans = ways * (long )more;
+        return (int) (ans % 1_000_000_007);
     }
 }
 
@@ -63,7 +53,7 @@ public class BinSplit
 {
     public static void main(String[] args)
     {
-        System.out.println(new Solution().numWays("10101"));
+        System.out.println(new Solution().numWays("100100010100110"));
     }
 }
 
