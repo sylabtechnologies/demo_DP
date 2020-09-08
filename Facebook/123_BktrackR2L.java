@@ -1,30 +1,33 @@
-// https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/
+// https://leetcode.com/problems/path-sum-ii/
 
 package root2leaf;
 import java.util.*;
 
 class Solution
 {
-    public int sumRootToLeaf(TreeNode root)
+    public List<List<Integer>> pathSum(TreeNode root, int target)
     {
-        ArrayList<ArrayList<Integer>> nums = new ArrayList<>();
+        List<List<Integer>> nums = new LinkedList<>();
         ArrayList<Integer> temp = new ArrayList<>();
-        int sum = 0;
         
         traverse(root, temp, nums);
-        for (ArrayList<Integer> num : nums)
+
+        // lnk lst to delete
+        for (Iterator<List<Integer>> it = nums.iterator(); it.hasNext();)
         {
-            StringBuilder curr = new StringBuilder();
-            for (Integer i : num)
-                curr.append(Integer.toString(i));
-            
-            sum += Integer.parseInt(curr.toString(), 2);
+            List<Integer> next = it.next();
+
+            int sum = 0;
+            for (Integer ii : next)
+                sum += ii;
+
+            if (sum != target) it.remove();
         }
         
-        return sum;
+        return nums;
     }
 
-    private void traverse(TreeNode root, ArrayList<Integer> temp, ArrayList<ArrayList<Integer>> nums)
+    private void traverse(TreeNode root, ArrayList<Integer> temp, List<List<Integer>> nums)
     {
         if (root == null)
             return;
@@ -34,7 +37,7 @@ class Solution
         if (root.left == null && root.right == null)
         {
             nums.add(new ArrayList<>(temp));
-            System.out.println(temp);
+//            System.out.println(temp);
         }
         else
         {
@@ -59,6 +62,6 @@ public class Root2Leaf
         rt.right.addLeft(0);
         rt.right.addRight(1);
         
-        System.out.println(new Solution().sumRootToLeaf(rt));
+        // System.out.println(new Solution().sumRootToLeaf(rt));
     }
 }
