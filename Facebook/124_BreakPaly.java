@@ -1,22 +1,20 @@
+// https://leetcode.com/problems/break-a-palindrome/
 package breakpaly;
 
-class Result
+class Solution
 {
-    public static String breakPalindrome(String palindromeStr)
+    public String breakPalindrome(String palindromeStr)
     {
         char pval[] = palindromeStr.toCharArray();
         
         int len = pval.length;
-        if (len == 1) return "IMPOSSIBLE";
+        if (len == 1) return new String();
         
-        int mid = 0;
-        if (len % 2 == 1)
-        {
-            mid = len/2 + 1;
-        }
+        int mid = -1;
+        if (len % 2 == 1) mid = len/2;
         
         boolean replaced = false;
-        for (int i = 0; i < pval.length; i++)
+        for (int i = 0; i < pval.length - 1; i++)
         {
             char c = pval[i];
             
@@ -28,35 +26,15 @@ class Result
             }
         }
         
-        if (replaced)
+        if (!replaced && pval[pval.length - 1] == 'a')
         {
-            if (checkPaly(pval))
-                return "IMPOSSIBLE";
-            
-            return new String(pval);
-        }
-        else
-            return "IMPOSSIBLE";
-    }
-
-    private static boolean checkPaly(char[] pval)
-    {
-        int i = 0, j = pval.length - 1;
-        while(i < j)
-        {
-            if (pval[i++] != pval[j--]) return false;
+            pval[pval.length - 1] = 'b';
+            replaced = true;
         }
         
-        return true;
+        if (replaced)
+            return new String(pval);
+        else
+            return new String();
     }
-}
-
-public class BreakPaly
-{
-    public static void main(String[] args)
-    {
-        String paly = "aaabbaaa";
-        System.out.println(Result.breakPalindrome(paly));
-    }
-    
 }
