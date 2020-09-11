@@ -1,28 +1,41 @@
-package dijkstra1;
+package criticalnode;
 import java.util.*;
 
-class Graph<E extends Comparable<E>>
+class Graph
 {
-    private List<TreeSet<E>> adjacency;
-
+    private List<ArrayList<Integer>> adjacency;
+    private int numEdges;
+    private int numVert;
+    
     public Graph(Integer numVertices)
     {
+        numVert = numVertices;
+        numEdges = 0;
         adjacency = new ArrayList<>(numVertices);
         
         for (int i = 0; i < numVertices; i++)
-            adjacency.add(new TreeSet<>());
+            adjacency.add(new ArrayList<>());
     }
     
-    void addEdge(int from, E to)
+    void addEdge(Edge e)
     {
-        TreeSet<E> node = adjacency.get(from);
-        node.add(to);
+        numEdges++;
+        adjacency.get(e.from).add(e.to);
+        adjacency.get(e.to).add(e.from);
     }
     
-    TreeSet<E> getAdjacency(int index)
+    List<Integer> getAdjacency(int index)
     {
         return adjacency.get(index);
     }
+
+    public int getEdges()
+    {
+        return numEdges;
+    }
+
+    public int getNodes()
+    {
+        return numVert;
+    }
 }
-
-
