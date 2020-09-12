@@ -5,11 +5,11 @@ class Graph
 {
     private List<ArrayList<Integer>> adjacency;
     private int numEdges;
-    private int numVert;
+    private int numNodes;
     
     public Graph(Integer numVertices)
     {
-        numVert = numVertices;
+        numNodes = numVertices;
         numEdges = 0;
         adjacency = new ArrayList<>(numVertices);
         
@@ -36,6 +36,6 @@ class Graph
 
     public int getNodes()
     {
-        return numVert;
+        return numNodes;
     }
 }
