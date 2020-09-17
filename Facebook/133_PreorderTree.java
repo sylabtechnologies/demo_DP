@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/
 package recover;
 import java.util.*;
 
@@ -53,9 +54,7 @@ class Solution
             if (curr.prefixLen == level)
             {
                 if (left < 0)
-                {
-                    left = i;                    
-                }
+                    left = i;
                 else if (right < 0)
                 {
                     right = i;
