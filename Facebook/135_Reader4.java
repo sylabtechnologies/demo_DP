@@ -1,32 +1,31 @@
-class Solution
+// https://leetcode.com/problems/read-n-characters-given-read4/
+public class Solution extends Reader4
 {
-    /**
-     * @param buf Destination buffer
-     * @param n   Number of characters to read
-     * @return    The number of actual characters read
-     */
     public int read(char[] buf, int n)
     {
+        if (n == 0) return 0;
+    
         char buf4[] = new char[4];
-        int i = 1, j = 0, b4 = 0;
-        
-        boolean eof = false;
-        for (; i <= n; i++)
-        {
-            if (b4 == 0)
-            {
-                b4 = read4(buf4);
-                j = 0;
-                
-                if (b4 != 4) eof = true;
-            }
+        int writeLen = 0, readIndex = 0, readLen = 0;
 
-            buf[i-1] = buf4[j];
-            j++; b4--;
+        readLen = read4(buf4);
+        while ( readLen > 0 )
+        {
+            buf[writeLen] = buf4[readIndex];
             
-            if (b4 == 0 && eof) break;
+            writeLen++;
+            readIndex++;
+            readLen--;
+
+            if (readLen == 0)
+            {
+                readLen = read4(buf4);
+                readIndex = 0;
+            }
+            
+            if (writeLen == n) break;
         }
         
-        return i;
+        return writeLen;
     }
 }
