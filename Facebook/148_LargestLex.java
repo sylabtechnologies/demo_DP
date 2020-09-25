@@ -1,7 +1,7 @@
 package templarges25;
 import java.util.*;
 
-/// IF B + A > A + B THEN WE GOT BA
+/// IF B + A > A + B THEN WE GOT BA (or be Greey (a, b) (a, b, c..)
 class Solution
 {
     public String largestNumber(int[] nums)
