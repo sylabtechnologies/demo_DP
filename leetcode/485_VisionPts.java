@@ -27,9 +27,10 @@ class Solution
         Collections.sort(theta);
         if (theta.size() <= 1) return theta.size() + zeroCnt;
         
-        // covering last base
+        // covering last + myAngle base
+        // which starts from -PI
         Double last = theta.get(theta.size()-1);
-        if (last > 2*PI - myAngle)
+        if (last > PI - myAngle)
         {
             for (int i = 0; i < theta.size(); i++)
             {
