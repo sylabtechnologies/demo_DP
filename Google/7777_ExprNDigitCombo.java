@@ -1,6 +1,6 @@
 import java.util.*;
 
-// https://leetcode.com/problems/expression-add-operators/
+// https://leetcode.com/problems/expression-add-operators/ ALLCOMBOS
 class Solution
 {
     private int target;
@@ -23,6 +23,9 @@ class Solution
     {
         if (start == arr.length)
         {
+            // we skip unaries
+            if (temp.get(0).equals("*") || temp.get(0).equals("-")) return;
+            
             if (eval(temp) == target)
             {
                 StringBuilder sb = new StringBuilder();
@@ -58,16 +61,46 @@ class Solution
             dfs(arr, temp, i + 1, res);
             temp.remove(temp.size() - 1);
             temp.remove(temp.size() - 1);
+
+            temp.add("*");
+            temp.add(Integer.toString(num));
+            dfs(arr, temp, i + 1, res);
+            temp.remove(temp.size() - 1);
+            temp.remove(temp.size() - 1);
         }
     }
 
     private int eval(ArrayList<String> temp)
     {
-        int sum = 0;
+        LinkedList<String> elems = new LinkedList<>();
         for (int i = 0; i < temp.size(); i+=2)
         {
-            int sign = temp.get(i).equals("-") ? -1 : 1;
-            sum += sign*Integer.parseInt(temp.get(i + 1));
+            String nxt = temp.get(i + 1);
+            switch (temp.get(i))
+            {
+                case "-":
+                case "+":
+                    elems.add(temp.get(i));
+                    elems.add(nxt);
+                break;
+
+                case "*":
+                    int mul = Integer.parseInt(elems.removeLast());
+                    if (mul != 0)
+                        mul *= Integer.parseInt(nxt);
+                    
+                    elems.add(Integer.toString(mul));
+                break;
+
+                default: throw new IllegalStateException();
+            }
+        }
+        
+        int sum = 0;
+        for (int i = 0; i < elems.size(); i+=2)
+        {
+            int sign = elems.get(i).equals("-") ? -1 : 1;
+            sum += sign*Integer.parseInt(elems.get(i + 1));
         }
 
         return sum;
