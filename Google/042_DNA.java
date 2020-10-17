@@ -1,9 +1,8 @@
-// https://leetcode.com/problems/repeated-dna-sequences/
+// https://leetcode.com/problems/repeated-dna-sequences/ = RK
 class Solution
 {
     private static final int DNALEN = 10;
     private static final int powered = (int) Math.pow(4.0, DNALEN  - 1);
-    private final int register[];
     private static final HashMap<Character, Integer> converter;
     static
     {
@@ -14,6 +13,9 @@ class Solution
         converter.put('T', 3);
     }
 
+    private final int register[];
+    private int[] myCodes;
+    
     Solution()
     {
         this.register  = new int[powered*4];
@@ -24,13 +26,16 @@ class Solution
         List<String> ans = new ArrayList<>();
         if (s.length() < DNALEN) return ans;
                 
-        char[] carr = s.toCharArray();
-        int hash = getHash(carr, 0);
+        myCodes = new int[s.length()];
+        for (int i = 0; i < myCodes.length; i++)
+            myCodes[i] = converter.get(s.charAt(i));
+        
+        int hash = getHash(myCodes, 0);
         register[hash] = 1;
         
         for (int curr = 1; curr + DNALEN <= s.length(); curr++)
         {
-            hash = moveHash(carr, hash, curr);
+            hash = moveHash(myCodes, hash, curr);
             
             if (register[hash] == 1)
                 ans.add(s.substring(curr, curr + DNALEN));
@@ -41,25 +46,22 @@ class Solution
         return ans;
     }
 
-    private int getHash(char[] carr, int start)
+    private int getHash(int[] carr, int start)
     {
         int hash = 0;
         for (int i = start; i < DNALEN; i++)
         {
             hash *= 4;
-            hash += converter.get(carr[i]);
+            hash += carr[i];
         }
         
         return hash;
     }
 
-    private int moveHash(char[] carr, int hash, int start)
+    private int moveHash(int[] carr, int hash, int start)
     {
-        char prevC = carr[start - 1];
-        char nextC = carr[start + DNALEN - 1];
-        
-        int val1 = converter.get(prevC);
-        int val2 = converter.get(nextC);
+        int val1 = carr[start - 1];
+        int val2 = carr[start + DNALEN - 1];
 
         if (val1 != 0)
             hash = hash % (val1*powered);
