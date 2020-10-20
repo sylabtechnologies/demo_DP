@@ -19,7 +19,7 @@ class Solution
         
         if (dec < 0)
         {
-            Arrays.sort(nums);
+            reverse(nums, 0);
             return;
         }
         
@@ -28,16 +28,13 @@ class Solution
         {
             if (nums[dec] < nums[i])
                 larger = i;
-            else break;;
+            else break;
             
             i++;
         }
         
         swap(nums, dec, larger); // n-reverse all sorted:
-        i = dec + 1;
-        int j = len - 1;
-        while (i < j)
-            swap(nums, i++, j--);
+        reverse(nums, dec + 1);
         return;
     }
 
@@ -46,5 +43,13 @@ class Solution
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+
+    private void reverse(int[] nums, int start)
+    {
+        int i = start;
+        int j = nums.length - 1;
+        while (i < j)
+            swap(nums, i++, j--);
     }
 }
