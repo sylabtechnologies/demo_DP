@@ -1,8 +1,7 @@
 package goog10;
 import java.util.*;
 
-// toposolution https://leetcode.com/problems/coin-path/
-/// w/ bfs decrease of indegrees
+// toposort https://leetcode.com/ - bfs will decrease indegrees
 
 class Solution
 {
