@@ -10,11 +10,12 @@ namespace Way2TargetStr
 {
     public class Solution
     {
-        private int[,] dp;
+        private int[,] memo;
 
-        public int NumWays(string[] words, string target)
+        public int NumWays(string[] words, string tar)
         {
-            dp = new int[1001,1001];
+            char[] target = tar.ToCharArray();
+            memo = new int[1001,1001];
             int[,] wayCount = new int[words[0].Length, 26];
 
             foreach (var word in words)
@@ -26,26 +27,26 @@ namespace Way2TargetStr
             return dfs(wayCount, target, 0, 0);
         }
 
-        private int dfs(int[,] wayCount, string target, int i, int j)
+        private int dfs(int[,] wayCount, char[] target, int loc, int charLoc)
         {
-            if (j >= target.Length) return 1;
+            if (charLoc >= target.Length) return 1;
 
-            if (dp[i,j] == 0)
+            if (memo[loc,charLoc] == 0)
             {
-                dp[i, j] = 1;
-                for (int k = i; k + target.Length - j <= wayCount.GetLength(0); k++)
+                memo[loc, charLoc] = 1;
+                for (int k = loc; k + target.Length - charLoc <= wayCount.GetLength(0); k++)
                 {
-                    int cnt = wayCount[k, target[j] - 'a'];
+                    int cnt = wayCount[k, target[charLoc] - 'a'];
                     if ( cnt > 0)
                     {
-                        long res = Convert.ToInt64(wayCount[k, target[j] - 'a']);
-                        res = res * dfs(wayCount, target, k + 1, j + 1) + dp[i, j];
-                        dp[i, j] = Convert.ToInt32(res % 1000000007);
+                        long res = Convert.ToInt64(wayCount[k, target[charLoc] - 'a']);
+                        res = res * dfs(wayCount, target, k + 1, charLoc + 1) + memo[loc, charLoc];
+                        memo[loc, charLoc] = Convert.ToInt32(res % 1000000007);
                     }
                 }
             }
 
-            return dp[i, j] - 1;
+            return memo[loc, charLoc] - 1;
         }
     }
 
